@@ -8,7 +8,6 @@ Building HTTP requests and responses using Java NIO/NIO2
 ### Boundary Conditions:
 * zero external dependencies beside JDK 1.8
 * only testing frameworks for (Junit, TestNG or others) and mocking frameworks (Mockito, PowerMock etc.) are permitted
-* Project to be build with Gradle (just for purpose of exploring and learning Gradle)
 
 # Basics
 
