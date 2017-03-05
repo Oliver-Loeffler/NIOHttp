@@ -7,7 +7,13 @@ enum GeneralResponseEntity {
 
     SERVER("Server"), DATETIME("Date"), CONTENT_TYPE(
             "Content-Type"), CONTENT_LENGTH(
-                    "Content-Length"), CONNECTION_STATUS("Connection");
+                    "Content-Length"), CONNECTION_STATUS(
+                            "Connection"), LAST_MODIFIED("Last-Modified"), ETAG(
+                                    "ETag"), ACCEPT_RANGES(
+                                            "Accept-Ranges"), VARY(
+                                                    "Vary"), X_POWERED_BY(
+                                                            "X-Powered-By"), KEEP_ALIVE(
+                                                                    "Keep-Alive");
 
     private String fieldName;
 
@@ -51,6 +57,29 @@ enum GeneralResponseEntity {
 		builder.contentLength(Long.valueOf(value.trim()).longValue());
 		break;
 	    }
+	    case KEEP_ALIVE: {
+		builder.keepAlive(value);
+		break;
+	    }
+	    case X_POWERED_BY: {
+		builder.xPoweredBy(value);
+		break;
+	    }
+	    case VARY: {
+		builder.vary(value);
+		break;
+	    }
+	    case ACCEPT_RANGES: {
+		builder.acceptRanges(value);
+		break;
+	    }
+	    case ETAG: {
+		builder.withEtag(value);
+	    }
+	    case LAST_MODIFIED:
+		builder.lastModified(value);
+		break;
+
 	}
     }
 

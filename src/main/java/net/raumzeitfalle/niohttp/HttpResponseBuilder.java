@@ -65,6 +65,42 @@ class HttpResponseBuilder {
 	return this;
     }
 
+    public HttpResponseBuilder lastModified(String lastModified) {
+	this.responseFields.put(GeneralResponseEntity.LAST_MODIFIED,
+	        lastModified);
+	return this;
+    }
+
+    public HttpResponseBuilder withEtag(String eTag) {
+	this.responseFields.put(GeneralResponseEntity.ETAG,
+	        eTag);
+	return this;
+    }
+
+    public HttpResponseBuilder acceptRanges(String acceptRanges) {
+	this.responseFields.put(GeneralResponseEntity.ACCEPT_RANGES,
+	        acceptRanges);
+	return this;
+    }
+
+    public HttpResponseBuilder vary(String vary) {
+	this.responseFields.put(GeneralResponseEntity.VARY,
+	        vary);
+	return this;
+    }
+
+    public HttpResponseBuilder xPoweredBy(String xPoweredBy) {
+	this.responseFields.put(GeneralResponseEntity.X_POWERED_BY,
+	        xPoweredBy);
+	return this;
+    }
+
+    public HttpResponseBuilder keepAlive(String keepAlive) {
+	this.responseFields.put(GeneralResponseEntity.KEEP_ALIVE,
+	        keepAlive);
+	return this;
+    }
+
     public HttpResponseBuilder withPayload(byte[] payload) {
 	this.payload = payload;
 	return this;
