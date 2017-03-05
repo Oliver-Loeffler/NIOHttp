@@ -1,5 +1,8 @@
 package net.raumzeitfalle.niohttp;
 
+/*
+ * TODO: Replace enum with individual types so that no switch is required for invoking the proper builder method.
+ */
 enum GeneralResponseEntity {
 
     SERVER("Server"), DATETIME("Date"), CONTENT_TYPE(
