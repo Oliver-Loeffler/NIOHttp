@@ -15,23 +15,25 @@ import java.nio.channels.SocketChannel;
 class Demo {
 
     public static void main(String args[]) throws IOException {
-	try (SocketChannel socketChannel = SocketChannel.open()) {
-	    socketChannel.connect(new InetSocketAddress("192.168.1.20", 80));
 
+	String serverIp = "192.168.1.20";
+	int httpPort = 80;
+
+	try (SocketChannel socketChannel = SocketChannel.open()) {
+	    socketChannel.connect(new InetSocketAddress(serverIp, httpPort));
 	    Demo demo = new Demo(socketChannel);
 	    HttpResponse response = demo.read();
-	    System.out.println(
+	    sysout(demo.getResponseBytes(),
 	            "Response (converted to String) received from Server");
-	    System.out.println(
-	            "----------------------------------------------------");
-	    System.out.println(new String(demo.responseBytes));
-
-	    System.out.println(
-	            "\ntoString() method of HttpResponse object called");
-	    System.out.println(
-	            "----------------------------------------------------");
-	    System.out.println(response.toString());
+	    sysout(response.getBytes(), "HttpResponse object content");
 	}
+    }
+
+    private static void sysout(byte[] bytes, String title) {
+	StringBuilder out = new StringBuilder(title)
+	        .append("----------------------------------------------------")
+	        .append(bytes);
+	System.out.println(out);
     }
 
     private SocketChannel socketChannel;
@@ -73,7 +75,8 @@ class Demo {
 	    this.responseBytes = responseReader.getBytesRead();
 	    return response;
 	}
-	throw new IOException("Failed too convice server to respond");
+	throw new IOException(
+	        "Failed too convice server to respond properly, or server sent empty response.");
     }
 
     /**
