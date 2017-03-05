@@ -7,7 +7,8 @@ import java.nio.channels.SocketChannel;
 
 /**
  * Requires a web server near by, will issue a bad request. Then a HttpResponse
- * object is created and printed to System.out.
+ * object is created and printed to System.out. The bad request works currently
+ * only on my Nginx 1.10.2 running on a Raspberry Pi.
  * 
  * @author oliver
  *
@@ -31,8 +32,10 @@ class Demo {
 
     private static void sysout(byte[] bytes, String title) {
 	StringBuilder out = new StringBuilder(title)
+	        .append(System.lineSeparator())
 	        .append("----------------------------------------------------")
-	        .append(bytes);
+	        .append(System.lineSeparator())
+	        .append(new String(bytes)).append(System.lineSeparator());
 	System.out.println(out);
     }
 
@@ -51,7 +54,7 @@ class Demo {
     }
 
     private void simpleButWrongRequest() throws IOException {
-	String request = "/";
+	String request = "/test.html";
 	ByteBuffer sending = ByteBuffer
 	        .allocateDirect(request.getBytes().length);
 	sending.put(request.getBytes());
