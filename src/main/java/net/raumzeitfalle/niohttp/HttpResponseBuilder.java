@@ -7,11 +7,11 @@ import java.util.TreeMap;
 
 class HttpResponseBuilder {
 
-    private Map<ResponseStatus, String> responseStatus = new HashMap<>(3);
+    private final Map<ResponseStatus, String> responseStatus = new HashMap<>(3);
 
-    private Map<GeneralResponseEntity, String> responseFields = new TreeMap<>();
+    private final Map<GeneralResponseEntity, String> responseFields = new TreeMap<>();
 
-    byte[] payload = new byte[0];
+	private byte[] payload = new byte[0];
 
     /**
      * With only protocol version given, a bad request response with status code

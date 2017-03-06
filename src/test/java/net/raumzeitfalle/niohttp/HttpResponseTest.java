@@ -1,9 +1,10 @@
 package net.raumzeitfalle.niohttp;
 
+import org.junit.Test;
+
+import static net.raumzeitfalle.niohttp.Constants.CRLF;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-
-import org.junit.Test;
 
 public class HttpResponseTest {
 
@@ -20,57 +21,56 @@ public class HttpResponseTest {
 
     @Test
     public void comparingStringRepresentations() {
-	assertEquals(exectedStringResponse(), classUnderTest.toString());
+        assertEquals(exectedStringResponse(), classUnderTest.toString());
     }
 
     @Test
     public void comparingByteArrayRepresentations() {
-	assertArrayEquals(getExpectedByteSequence(),
-	        classUnderTest.getBytes());
+        assertArrayEquals(getExpectedByteSequence(),
+                classUnderTest.getBytes());
     }
 
     @Test
     public void fromBytes() {
-	HttpResponse testCase = HttpResponse
-	        .fromBytes(getExpectedByteSequence());
+        HttpResponse testCase = HttpResponse
+                .fromBytes(getExpectedByteSequence());
 
-	assertEquals(exectedStringResponse(), testCase.toString());
+        assertEquals(exectedStringResponse(), testCase.toString());
 
     }
 
     private byte[] getExpectedByteSequence() {
-	return exectedStringResponse().getBytes();
+        return exectedStringResponse().getBytes();
     }
 
     private String exectedStringResponse() {
-	return new StringBuilder("HTTP/1.1")
-	        .append(" 400 Bad Request").append(CR)
-	        .append("Server: nginx/1.10.2").append(CR)
-	        .append("Date: Sat, 04 Mar 2017 22:02:46 GMT").append(CR)
-	        .append("Content-Type: text/html").append(CR)
-	        .append("Content-Length: 173").append(CR)
-	        .append("Connection: close").append(CR).append(CR)
-	        .append("<html>").append(CR)
-	        .append("<head><title>400 Bad Request</title></head>")
-	        .append(CR)
-	        .append("<body bgcolor=\"white\">").append(CR)
-	        .append("<center><h1>400 Bad Request</h1></center>").append(CR)
-	        .append("<hr><center>nginx/1.10.2</center>").append(CR)
-	        .append("</body>").append(CR)
-	        .append("</html>")
-	        .toString();
+        return new StringBuilder("HTTP/1.1")
+                .append(" 400 Bad Request").append(CRLF)
+                .append("Server: nginx/1.10.2").append(CRLF)
+                .append("Date: Sat, 04 Mar 2017 22:02:46 GMT").append(CRLF)
+                .append("Content-Type: text/html").append(CRLF)
+                .append("Content-Length: 173").append(CRLF)
+                .append("Connection: close").append(CRLF).append(CRLF)
+                .append("<html>").append(CRLF)
+                .append("<head><title>400 Bad Request</title></head>")
+                .append(CRLF)
+                .append("<body bgcolor=\"white\">").append(CRLF)
+                .append("<center><h1>400 Bad Request</h1></center>").append(CRLF)
+                .append("<hr><center>nginx/1.10.2</center>").append(CRLF)
+                .append("</body>").append(CRLF)
+                .append("</html>")
+                .toString();
     }
 
     private String payload() {
-	return new StringBuilder("<html>").append(CR)
-	        .append("<head><title>400 Bad Request</title></head>")
-	        .append(CR)
-	        .append("<body bgcolor=\"white\">").append(CR)
-	        .append("<center><h1>400 Bad Request</h1></center>").append(CR)
-	        .append("<hr><center>nginx/1.10.2</center>").append(CR)
-	        .append("</body>").append(CR)
-	        .append("</html>").toString();
+        return new StringBuilder("<html>").append(CRLF)
+                .append("<head><title>400 Bad Request</title></head>")
+                .append(CRLF)
+                .append("<body bgcolor=\"white\">").append(CRLF)
+                .append("<center><h1>400 Bad Request</h1></center>").append(CRLF)
+                .append("<hr><center>nginx/1.10.2</center>").append(CRLF)
+                .append("</body>").append(CRLF)
+                .append("</html>").toString();
     }
 
-    private static final String CR = "\r\n";
 }
