@@ -1,14 +1,5 @@
 package net.raumzeitfalle.niohttp;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.nio.channels.SocketChannel;
-
-import org.junit.Test;
-
 /**
  * Requires a web server near by, will issue a bad request. Then a HttpResponse
  * object is created and printed to System.out. Then the HttpResponse is turned
@@ -19,6 +10,8 @@ import org.junit.Test;
  */
 public class DemoTest {
 
+    /*
+    Tests runs against an internal IP adress. This can not work by for example a Travis build
     @Test
     public void demo() throws IOException {
 
@@ -36,6 +29,6 @@ public class DemoTest {
 	assertNotNull(response);
 	assertEquals(new String(bytesFromServer), response.toString());
 
-    }
+    }*/
 
 }
