@@ -35,7 +35,7 @@ public class EntityFieldsParametrizedTest {
     }
 
     @Test
-    public void test_addTwoNumbes() {
+    public void fieldFromString() {
 	assertThat(EntityFields.fromString(this.messageFieldName), is(this.expectation));
     }
 

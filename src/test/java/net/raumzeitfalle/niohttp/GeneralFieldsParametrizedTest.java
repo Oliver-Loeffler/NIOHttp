@@ -33,7 +33,7 @@ public class GeneralFieldsParametrizedTest {
     }
 
     @Test
-    public void test_addTwoNumbes() {
+    public void fieldFromString() {
 	assertThat(GeneralFields.fromString(this.messageFieldName), is(this.expectation));
     }
 
