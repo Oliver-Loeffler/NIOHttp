@@ -3,6 +3,7 @@ package net.raumzeitfalle.niohttp;
 import java.util.Objects;
 
 /**
+ * Applicable specification: RFC7230, RFC2616 has been superseded.<br>
  * HTTP 1.1 RFC2616 section 6 defines following fields to provide additional
  * details about the response:
  * <ul>

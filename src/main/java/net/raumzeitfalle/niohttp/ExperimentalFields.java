@@ -2,6 +2,10 @@ package net.raumzeitfalle.niohttp;
 
 import java.util.Objects;
 
+/**
+ * Applicable specification: RFC7230, RFC2616 has been superseded.
+ *
+ */
 class ExperimentalFields implements MessageField {
 
     private final String name;
