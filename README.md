@@ -15,16 +15,17 @@ Building HTTP requests and responses using Java NIO/NIO2
  * Submit a HttpRequest by writing the request to a ByteBuffer connected to the SocketChannel
  * Read the servers response from corresponding receive ByteBuffer
   * Use HttpResponseReader to read the byte[] sequences
-  * Use HttpResponse.fromBytes(byte[] bytes) to create a HttpResponse object wich allows access to all HTTP message fields and values and of course, to the HTTP response payload (content) 
+  * Use HttpResponse.fromBytes(byte[] bytes) to create a HttpResponse object which allows access to all HTTP message fields and values and of course, to the HTTP response payload (content) 
 
 # Basics
+## The HTTP Working Group
+* HTTP Working Group: http://httpwg.org
 
-### HTTP 1.1 Protocol
+### The HTTP 1.1 Protocol 
 
-* IETF RFC2616 https://tools.ietf.org/html/rfc2616
-* HTTP Working Group: https://tools.ietf.org/wg/httpbis/
-* HTTP Requests: https://www.w3.org/Protocols/rfc2616/rfc2616-sec5.html
-* HTTP Responses: https://www.w3.org/Protocols/rfc2616/rfc2616-sec6.html#sec6
+* Introduction for RFC7230: http://httpwg.org/specs/rfc7230.html#introduction
+* Uniform Resource Identifier (URI) in HTTP: http://httpwg.org/specs/rfc7230.html#uri
+* Message format: http://httpwg.org/specs/rfc7230.html#http.message
 
 ### HTTP/2 Protocol
 
