@@ -1,5 +1,7 @@
 # NIOHttp
 
+[![Build Status](https://travis-ci.org/Oliver-Loeffler/NIOHttp.svg?branch=master)](https://travis-ci.org/Oliver-Loeffler/NIOHttp) [![codecov](https://codecov.io/gh/Oliver-Loeffler/NIOHttp/branch/master/graph/badge.svg)](https://codecov.io/gh/Oliver-Loeffler/NIOHttp)  
+
 Building HTTP requests and responses using Java NIO/NIO2
 
 ### Goals:
