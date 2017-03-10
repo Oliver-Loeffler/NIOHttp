@@ -29,6 +29,10 @@ Building HTTP requests and responses using Java NIO/NIO2
 * Introduction for RFC7230: http://httpwg.org/specs/rfc7230.html#introduction
 * Uniform Resource Identifier (URI) in HTTP: http://httpwg.org/specs/rfc7230.html#uri
 * Message format: http://httpwg.org/specs/rfc7230.html#http.message
+* Semantics and Content: http://httpwg.org/specs/rfc7231.html#top
+ * Request Methods http://httpwg.org/specs/rfc7231.html#methods
+ * Request Header fields: http://httpwg.org/specs/rfc7231.html#request.header.fields
+ * Response Status Codes: http://httpwg.org/specs/rfc7231.html#status.codes
 
 ### HTTP/2 Protocol
 
