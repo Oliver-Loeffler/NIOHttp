@@ -4,7 +4,7 @@ import java.util.Objects;
 
 class MessageFieldFactory {
 
-    private static MessageFieldFactory instance = new MessageFieldFactory();
+    private static final MessageFieldFactory instance = new MessageFieldFactory();
 
     private MessageFieldFactory() {
     }
@@ -13,7 +13,7 @@ class MessageFieldFactory {
 	return instance;
     }
 
-    public MessageField fromString(String lineFromBytes) {
+    public MessageField fromString(final String lineFromBytes) {
 	Objects.requireNonNull(lineFromBytes, "lineFromBytes should not be null");
 	if (GeneralFields.isGeneralField(lineFromBytes)) {
 	    return GeneralFields.fromString(lineFromBytes);
