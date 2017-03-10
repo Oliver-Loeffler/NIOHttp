@@ -18,7 +18,7 @@ import java.util.Objects;
  * </ul>
  *
  */
-public enum GeneralFields implements MessageField {
+public enum GeneralFields implements HeaderField {
     CACHE_CONTROL("Cache-Control"),
     CONNECTION("Connection"),
     DATETIME("Date"),

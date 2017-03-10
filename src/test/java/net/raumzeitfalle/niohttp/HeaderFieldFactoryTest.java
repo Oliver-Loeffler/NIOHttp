@@ -5,9 +5,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class MessageFieldFactoryTest {
+public class HeaderFieldFactoryTest {
 
-    MessageFieldFactory classUnderTest = MessageFieldFactory.getInstance();
+    HeaderFieldFactory classUnderTest = HeaderFieldFactory.getInstance();
 
     @Test
     public void ensureInstanceIsNotNull() {
@@ -16,25 +16,25 @@ public class MessageFieldFactoryTest {
 
     @Test
     public void createEntityFieldFromLine() {
-	MessageField entityField = classUnderTest.fromString(entityKeyValueExample());
+	HeaderField entityField = classUnderTest.fromString(entityKeyValueExample());
 	assertEquals(EntityFields.CONTENT_RANGE, entityField);
     }
 
     @Test
     public void createGeneralFieldFromLine() {
-	MessageField generalField = classUnderTest.fromString(generalKeyValueExample());
+	HeaderField generalField = classUnderTest.fromString(generalKeyValueExample());
 	assertEquals(GeneralFields.TRANSFER_ENCODING, generalField);
     }
 
     @Test
     public void createResponseFieldFromLine() {
-	MessageField responseField = classUnderTest.fromString(responseKeyValueExample());
+	HeaderField responseField = classUnderTest.fromString(responseKeyValueExample());
 	assertEquals(ResponseFields.WWW_AUTHENTICATE, responseField);
     }
 
     @Test
     public void creareExperimentalFieldFromLine() {
-	MessageField experimentalField = classUnderTest.fromString(experimentalKeyValueExample());
+	HeaderField experimentalField = classUnderTest.fromString(experimentalKeyValueExample());
 	assertEquals("X-Unsupported-Feature", experimentalField.getFieldName());
     }
 

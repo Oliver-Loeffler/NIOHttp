@@ -21,7 +21,7 @@ import java.util.Objects;
  * </ul>
  *
  */
-public enum EntityFields implements MessageField {
+public enum EntityFields implements HeaderField {
     ALLOW("Allow"),
     CONTENT_ENCODING("Content-Encoding"),
     CONTENT_LANGUAGE("Content-Language"),

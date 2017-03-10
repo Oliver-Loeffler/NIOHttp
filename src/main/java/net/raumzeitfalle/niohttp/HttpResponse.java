@@ -16,7 +16,7 @@ class HttpResponse {
 
     private final byte[] payload;
 
-    private final Map<MessageField, String> responseFields = new TreeMap<>(new MessageFieldComparator());
+    private final Map<HeaderField, String> responseFields = new TreeMap<>(new HeaderFieldComparator());
 
     public HttpResponse(final String protocolVersion, final String statusCode,
                  final String reasonPhrase, final byte[] payload) {
@@ -32,7 +32,7 @@ class HttpResponse {
                 .append(statusCode)
                 .append(SPACE).append(reasonPhrase).append(CRLF);
 
-	for (Entry<MessageField, String> e : responseFields
+	for (Entry<HeaderField, String> e : responseFields
                 .entrySet()) {
             addResponseFieldContent(b, e.getKey());
         }
@@ -49,13 +49,13 @@ class HttpResponse {
         return toString().getBytes();
     }
 
-    protected void addResponseFieldWithValue(MessageField field,
+    protected void addResponseFieldWithValue(HeaderField field,
                                              String value) {
         this.responseFields.put(field, value);
     }
 
     private void addResponseFieldContent(StringBuilder b,
-	    MessageField responseField) {
+	    HeaderField responseField) {
         Objects.requireNonNull(b, "String builder should not be null");
         Objects.requireNonNull(responseField, "responseField builder should not be null");
         if (this.responseFields.containsKey(responseField)) {
@@ -89,7 +89,7 @@ class HttpResponse {
         int lineIndex = 1;
         String line = responseLines[lineIndex];
         while (!line.isEmpty()) {
-	    MessageField messageField = MessageFieldFactory.getInstance().fromString(line);
+	    HeaderField messageField = HeaderFieldFactory.getInstance().fromString(line);
             int separation = line.indexOf(SPACE) + 1;
 	    responseBuilder.addMessageField(messageField, line.substring(separation, line.length()));
             line = responseLines[lineIndex++];

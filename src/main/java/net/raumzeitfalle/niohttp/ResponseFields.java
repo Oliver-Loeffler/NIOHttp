@@ -19,7 +19,7 @@ import java.util.Objects;
  * </ul>
  *
  */
-public enum ResponseFields implements MessageField {
+public enum ResponseFields implements HeaderField {
     ACCEPT_RANGES("Accept-Ranges"),
     AGE("Age"),
     ETAG("ETag"),

@@ -2,9 +2,9 @@ package net.raumzeitfalle.niohttp;
 
 import java.util.Comparator;
 
-public class MessageFieldComparator implements Comparator<MessageField> {
+public class HeaderFieldComparator implements Comparator<HeaderField> {
     @Override
-    public int compare(MessageField a, MessageField b) {
+    public int compare(HeaderField a, HeaderField b) {
 	return b.getFieldName().toLowerCase().compareTo(a.getFieldName().toLowerCase());
     }
 

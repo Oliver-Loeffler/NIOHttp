@@ -9,7 +9,7 @@ class HttpResponseBuilder {
 
     private final Map<ResponseStatus, String> responseStatus = new HashMap<>(3);
 
-    private final Map<MessageField, String> responseFields = new TreeMap<>(new MessageFieldComparator());
+    private final Map<HeaderField, String> responseFields = new TreeMap<>(new HeaderFieldComparator());
 
 	private byte[] payload = new byte[0];
 
@@ -89,7 +89,7 @@ class HttpResponseBuilder {
 	return this;
     }
 
-    public HttpResponseBuilder addMessageField(MessageField field, String value) {
+    public HttpResponseBuilder addMessageField(HeaderField field, String value) {
 	this.responseFields.put(field, value);
 	return this;
     }
@@ -98,7 +98,7 @@ class HttpResponseBuilder {
 	HttpResponse response = new HttpResponse(protocolVersionText(),
 	        statusCode(), reasonPhrase(), payload);
 
-	for (Entry<MessageField, String> e : responseFields
+	for (Entry<HeaderField, String> e : responseFields
 	        .entrySet()) {
 	    response.addResponseFieldWithValue(e.getKey(), e.getValue());
 	}

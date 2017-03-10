@@ -2,18 +2,18 @@ package net.raumzeitfalle.niohttp;
 
 import java.util.Objects;
 
-class MessageFieldFactory {
+class HeaderFieldFactory {
 
-    private static final MessageFieldFactory instance = new MessageFieldFactory();
+    private static final HeaderFieldFactory instance = new HeaderFieldFactory();
 
-    private MessageFieldFactory() {
+    private HeaderFieldFactory() {
     }
 
-    public static MessageFieldFactory getInstance() {
+    public static HeaderFieldFactory getInstance() {
 	return instance;
     }
 
-    public MessageField fromString(final String lineFromBytes) {
+    public HeaderField fromString(final String lineFromBytes) {
 	Objects.requireNonNull(lineFromBytes, "lineFromBytes should not be null");
 	if (GeneralFields.isGeneralField(lineFromBytes)) {
 	    return GeneralFields.fromString(lineFromBytes);

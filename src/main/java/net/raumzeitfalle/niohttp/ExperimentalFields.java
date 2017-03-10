@@ -6,7 +6,7 @@ import java.util.Objects;
  * Applicable specification: RFC7230, RFC2616 has been superseded.
  *
  */
-class ExperimentalFields implements MessageField {
+class ExperimentalFields implements HeaderField {
 
     private final String name;
 
