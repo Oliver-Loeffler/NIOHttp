@@ -45,6 +45,7 @@ Building HTTP request and response objects which can be written and read from ja
  * Request Header fields: http://httpwg.org/specs/rfc7231.html#request.header.fields
  * Response Status Codes: http://httpwg.org/specs/rfc7231.html#status.codes
  * Response Header Fields: http://httpwg.org/specs/rfc7231.html#response.header.fields
+* IANA Status code assignments: http://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
 
 ### HTTP/2 Protocol
 

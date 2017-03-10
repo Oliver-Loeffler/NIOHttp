@@ -11,7 +11,7 @@ class HttpResponseBuilder {
 
     private final Map<HeaderField, String> responseFields = new TreeMap<>(new HeaderFieldComparator());
 
-	private byte[] payload = new byte[0];
+    private byte[] payload = new byte[0];
 
     /**
      * With only protocol version given, a bad request response with status code
