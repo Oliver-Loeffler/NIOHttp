@@ -2,20 +2,25 @@
 
 [![Build Status](https://travis-ci.org/Oliver-Loeffler/NIOHttp.svg?branch=master)](https://travis-ci.org/Oliver-Loeffler/NIOHttp)  
 
-Building HTTP requests and responses using Java NIO/NIO2
+Building HTTP request and response objects which can be written and read from java.nio.channels.
 
-### Goals:
+## Goals:
 
-* Create a library/toolkit to build and send HTTP requests vis NIO/NIO2 as well to receive HTTP requests via NIO/NIO2 and to parse them
-* Implement HTTP/1.1 first.
-
+ * Create a library/toolkit to build and send HTTP requests vis NIO/NIO2 as well to receive HTTP requests via NIO/NIO2 and to parse them
+ * Implement HTTP/1.1 first.
 
 ### Boundary Conditions:
 
-* zero external dependencies beside JDK 1.8
-* only testing frameworks for (Junit, TestNG or others) and mocking frameworks (Mockito, PowerMock etc.) are permitted
+ * zero external dependencies beside JDK 1.8
+ * only testing frameworks for (Junit, TestNG or others) and mocking frameworks (Mockito, PowerMock etc.) are permitted
 
+### Steps to implementation
 
+ 1. Implement first draft of HttpResponse class and corresponding reader class considering RFC7230 and RFC7231
+ 2. The first version of HttpResponse will only carry HTTP fields and payload
+ 3. Implement simple HttpRequest class and corresponding HttpRequestBuilder
+ 
+ 
 # Idea
 
  * Connecting to a given URL using SocketChannels
