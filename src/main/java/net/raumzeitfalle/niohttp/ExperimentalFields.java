@@ -17,7 +17,7 @@ class ExperimentalFields implements HeaderField {
      * @throws RuntimeException
      *             when field name length is 0
      */
-    public static ExperimentalFields fromLine(String lineFromBytes) {
+    public static ExperimentalFields fromLine(final String lineFromBytes) {
 	return new ExperimentalFields(
 		parseFieldNameFrom(Objects.requireNonNull(lineFromBytes, "line from HTTP message must not be null")));
     }
@@ -28,7 +28,7 @@ class ExperimentalFields implements HeaderField {
      * @throws RuntimeException
      *             when field name length is 0
      */
-    public ExperimentalFields(String name) {
+    public ExperimentalFields(final String name) {
 	this.name = requireTrimmedNonZeroLength(Objects.requireNonNull(name));
     }
 
@@ -36,12 +36,12 @@ class ExperimentalFields implements HeaderField {
 	return this.name;
     }
 
-    private static String parseFieldNameFrom(String line) {
+    private static String parseFieldNameFrom(final String line) {
 	int separation = line.indexOf(Constants.FIELD_VALUE_SEPARATOR);
 	return line.substring(0, separation);
     }
 
-    private String requireTrimmedNonZeroLength(String fieldName) {
+    private String requireTrimmedNonZeroLength(final String fieldName) {
 	if (fieldName.trim().length() > 0) {
 	    return fieldName.trim();
 	}

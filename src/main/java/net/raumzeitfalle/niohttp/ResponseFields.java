@@ -51,6 +51,7 @@ public enum ResponseFields implements HeaderField {
     }
 
     public static boolean isResponseField(final String lineFromBytes) {
+	Objects.requireNonNull(lineFromBytes, "lineFromBytes should not be null");
 	for (ResponseFields responseField : values()) {
 	    if (lineFromBytes.trim().toLowerCase().startsWith(responseField.fieldName.toLowerCase())) {
 		return true;

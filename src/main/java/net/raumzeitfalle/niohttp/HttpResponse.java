@@ -49,9 +49,8 @@ class HttpResponse {
         return toString().getBytes();
     }
 
-    protected void addResponseFieldWithValue(HeaderField field,
-                                             String value) {
-        this.responseFields.put(field, value);
+    protected void addResponseFieldWithValue(final HeaderField field, final String value) {
+	this.responseFields.put(field, Objects.requireNonNull(value, "value assigned to a field must not be null"));
     }
 
     private void addResponseFieldContent(StringBuilder b,

@@ -2,6 +2,7 @@ package net.raumzeitfalle.niohttp;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
@@ -21,65 +22,63 @@ class HttpResponseBuilder {
      * @param protocolVersion
      */
     public HttpResponseBuilder(String protocolVersion) {
-	this.responseStatus.put(ResponseStatus.PROTOCOL_VERSION,
-	        protocolVersion);
-	this.responseStatus.put(ResponseStatus.STATUS_CODE, "400");
-	this.responseStatus.put(ResponseStatus.REASON_PHRASE, "Bad Request");
+	addStatusParameter(ResponseStatus.PROTOCOL_VERSION, protocolVersion);
+	addStatusParameter(ResponseStatus.STATUS_CODE, "400");
+	addStatusParameter(ResponseStatus.REASON_PHRASE, "Bad Request");
     }
 
     public HttpResponseBuilder withStatus(String statusCode) {
-	this.responseStatus.put(ResponseStatus.STATUS_CODE, statusCode);
+	addStatusParameter(ResponseStatus.STATUS_CODE, statusCode);
 	return this;
     }
 
     public HttpResponseBuilder withReasonPhrase(String reasonPhrase) {
-	this.responseStatus.put(ResponseStatus.REASON_PHRASE, reasonPhrase);
+	addStatusParameter(ResponseStatus.REASON_PHRASE, reasonPhrase);
 	return this;
     }
 
     public HttpResponseBuilder servedBy(String server) {
-	this.responseFields.put(ResponseFields.SERVER, server);
+	addFieldWithValue(ResponseFields.SERVER, server);
 	return this;
     }
 
     public HttpResponseBuilder deliveredAt(String date) {
-	this.responseFields.put(GeneralFields.DATETIME, date);
+	addFieldWithValue(GeneralFields.DATETIME, date);
 	return this;
     }
 
     public HttpResponseBuilder withContentOfType(String contentType) {
-	this.responseFields.put(EntityFields.CONTENT_TYPE, contentType);
+	addFieldWithValue(EntityFields.CONTENT_TYPE, contentType);
 	return this;
     }
 
     public HttpResponseBuilder contentLength(long contentLength) {
-	this.responseFields.put(EntityFields.CONTENT_LENGTH,
-	        String.valueOf(contentLength));
+	addFieldWithValue(EntityFields.CONTENT_LENGTH, String.valueOf(contentLength));
 	return this;
     }
 
     public HttpResponseBuilder withConnectionStatus(String connection) {
-	this.responseFields.put(GeneralFields.CONNECTION, connection);
+	addFieldWithValue(GeneralFields.CONNECTION, connection);
 	return this;
     }
 
     public HttpResponseBuilder lastModified(String lastModified) {
-	this.responseFields.put(EntityFields.LAST_MODIFIED, lastModified);
+	addFieldWithValue(EntityFields.LAST_MODIFIED, lastModified);
 	return this;
     }
 
     public HttpResponseBuilder withEtag(String entityTag) {
-	this.responseFields.put(ResponseFields.ETAG, entityTag);
+	addFieldWithValue(ResponseFields.ETAG, entityTag);
 	return this;
     }
 
     public HttpResponseBuilder acceptRanges(String acceptRanges) {
-	this.responseFields.put(ResponseFields.ACCEPT_RANGES, acceptRanges);
+	addFieldWithValue(ResponseFields.ACCEPT_RANGES, acceptRanges);
 	return this;
     }
 
     public HttpResponseBuilder vary(String vary) {
-	this.responseFields.put(ResponseFields.VARY, vary);
+	addFieldWithValue(ResponseFields.VARY, vary);
 	return this;
     }
 
@@ -90,8 +89,16 @@ class HttpResponseBuilder {
     }
 
     public HttpResponseBuilder addMessageField(HeaderField field, String value) {
-	this.responseFields.put(field, value);
+	addFieldWithValue(field, value);
 	return this;
+    }
+
+    private void addFieldWithValue(final HeaderField field, final String value) {
+	this.responseFields.put(field, Objects.requireNonNull(value, "value assigned to field should not be null"));
+    }
+
+    private void addStatusParameter(final ResponseStatus parameter, final String value) {
+	this.responseStatus.put(parameter, Objects.requireNonNull(value, "value assigned to field should not be null"));
     }
 
     public HttpResponse build() {

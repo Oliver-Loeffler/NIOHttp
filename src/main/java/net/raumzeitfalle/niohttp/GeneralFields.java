@@ -50,6 +50,7 @@ public enum GeneralFields implements HeaderField {
     }
 
     public static boolean isGeneralField(final String lineFromBytes) {
+	Objects.requireNonNull(lineFromBytes, "lineFromBytes should not be null");
 	for (GeneralFields generalField : values()) {
 	    if (lineFromBytes.trim().toLowerCase().startsWith(generalField.fieldName.toLowerCase())) {
 		return true;
