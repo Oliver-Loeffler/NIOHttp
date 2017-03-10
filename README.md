@@ -5,12 +5,16 @@
 Building HTTP requests and responses using Java NIO/NIO2
 
 ### Goals:
+
 * Create a library/toolkit to build and send HTTP requests vis NIO/NIO2 as well to receive HTTP requests via NIO/NIO2 and to parse them
 * Implement HTTP/1.1 first.
 
+
 ### Boundary Conditions:
+
 * zero external dependencies beside JDK 1.8
 * only testing frameworks for (Junit, TestNG or others) and mocking frameworks (Mockito, PowerMock etc.) are permitted
+
 
 # Idea
 
@@ -22,7 +26,9 @@ Building HTTP requests and responses using Java NIO/NIO2
 
 # Basics
 ## The HTTP Working Group
+
 * HTTP Working Group: http://httpwg.org
+
 
 ### The HTTP/1.1 Protocol 
 
@@ -33,6 +39,7 @@ Building HTTP requests and responses using Java NIO/NIO2
  * Request Methods http://httpwg.org/specs/rfc7231.html#methods
  * Request Header fields: http://httpwg.org/specs/rfc7231.html#request.header.fields
  * Response Status Codes: http://httpwg.org/specs/rfc7231.html#status.codes
+ * Response Header Fields: http://httpwg.org/specs/rfc7231.html#response.header.fields
 
 ### HTTP/2 Protocol
 
