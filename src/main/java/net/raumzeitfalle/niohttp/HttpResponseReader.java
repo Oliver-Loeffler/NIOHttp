@@ -10,61 +10,43 @@ class HttpResponseReader {
 
     private final ReadableByteChannel channel;
 
-    private byte[] bytesRead;
+    private byte[] bytesRead = new byte[0];
 
     public HttpResponseReader(final ReadableByteChannel channel) {
-		this.channel = Objects.requireNonNull(channel, "channel should not be null");
+	this.channel = Objects.requireNonNull(channel, "channel should not be null");
     }
 
-    public void readFromBuffer(final Consumer<HttpResponse> responseConsumer) throws IOException {
-		Objects.requireNonNull(responseConsumer, "responseConsumer should not be null");
+    public void read(final Consumer<HttpResponse> responseConsumer) throws IOException {
+	Objects.requireNonNull(responseConsumer, "responseConsumer should not be null");
+	readBytesFromChannel();
 
-		int read = 0;
-		ByteBuffer inputBuffer = ByteBuffer.allocate(48);
-		while (read >= 0) {
-			read = channel.read(inputBuffer);
+	HttpResponse response = HttpResponse.fromBytes(this.bytesRead);
+	responseConsumer.accept(response);
+    }
 
-			byte[] newBytesRead = inputBuffer.array();
-			byte[] merge = new byte[bytesRead.length + newBytesRead.length];
-
-			int index = 0;
-			for(byte b : bytesRead) {
-				merge[index] = b;
-				index++;
-			}
-			for(byte b : newBytesRead) {
-				merge[index] = b;
-				index++;
-			}
-			bytesRead = merge;
-			inputBuffer.clear();
-
-
-			byte CRLF = 13;
-			for (int i = 1; i < bytesRead.length; i++) {
-				if (bytesRead[i - 1] == CRLF && bytesRead[i] == CRLF) {
-					byte[] responseBytes = new byte[i];
-
-					for(int j = 0; j <= i; j++) {
-						responseBytes[j] = bytesRead[j];
-					}
-					HttpResponse response = HttpResponse.fromBytes(responseBytes);
-					responseConsumer.accept(response);
-
-					byte[] unusedBytes = new byte[bytesRead.length - responseBytes.length];
-					for(int j = responseBytes.length; j < bytesRead.length; j++) {
-						unusedBytes[j] = bytesRead[j];
-					}
-					bytesRead = unusedBytes;
-				}
-			}
-		}
+    private void readBytesFromChannel() throws IOException {
+	int numberOfBytesRead = 0;
+	int byteBufferSize = 48;
+	ByteBuffer inputBuffer = ByteBuffer.allocate(byteBufferSize);
+	do {
+	    inputBuffer.clear();
+	    numberOfBytesRead = channel.read(inputBuffer);
+	    this.bytesRead = mergeArrays(this.bytesRead, inputBuffer.array(), numberOfBytesRead);
+	} while (numberOfBytesRead == byteBufferSize);
     }
 
     /**
      * @return bytes read from buffer
      */
     protected byte[] getBytesRead() {
-		return this.bytesRead;
+	return this.bytesRead;
+    }
+
+    private byte[] mergeArrays(byte[] oldBytes, byte[] newBytes, int numberOfNewBytesToConsider) {
+	assert (numberOfNewBytesToConsider <= newBytes.length);
+	byte[] result = new byte[oldBytes.length + numberOfNewBytesToConsider];
+	System.arraycopy(oldBytes, 0, result, 0, oldBytes.length);
+	System.arraycopy(newBytes, 0, result, oldBytes.length, numberOfNewBytesToConsider);
+	return result;
     }
 }
