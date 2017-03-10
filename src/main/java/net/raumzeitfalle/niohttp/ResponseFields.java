@@ -48,4 +48,13 @@ public enum ResponseFields implements MessageField {
 	}
 	throw new RuntimeException("Unknown HTTP header response field");
     }
+
+    public static boolean isResponseField(final String lineFromBytes) {
+	for (ResponseFields responseField : values()) {
+	    if (lineFromBytes.trim().toLowerCase().startsWith(responseField.fieldName.toLowerCase())) {
+		return true;
+	    }
+	}
+	return false;
+    }
 }

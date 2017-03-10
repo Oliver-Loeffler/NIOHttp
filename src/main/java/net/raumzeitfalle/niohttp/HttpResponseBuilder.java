@@ -9,7 +9,7 @@ class HttpResponseBuilder {
 
     private final Map<ResponseStatus, String> responseStatus = new HashMap<>(3);
 
-    private final Map<GeneralResponseEntity, String> responseFields = new TreeMap<>();
+    private final Map<MessageField, String> responseFields = new TreeMap<>(new MessageFieldComparator());
 
 	private byte[] payload = new byte[0];
 
@@ -38,71 +38,59 @@ class HttpResponseBuilder {
     }
 
     public HttpResponseBuilder servedBy(String server) {
-	this.responseFields.put(GeneralResponseEntity.SERVER, server);
+	this.responseFields.put(ResponseFields.SERVER, server);
 	return this;
     }
 
     public HttpResponseBuilder deliveredAt(String date) {
-	this.responseFields.put(GeneralResponseEntity.DATETIME, date);
+	this.responseFields.put(GeneralFields.DATETIME, date);
 	return this;
     }
 
     public HttpResponseBuilder withContentOfType(String contentType) {
-	this.responseFields.put(GeneralResponseEntity.CONTENT_TYPE,
-	        contentType);
+	this.responseFields.put(EntityFields.CONTENT_TYPE, contentType);
 	return this;
     }
 
     public HttpResponseBuilder contentLength(long contentLength) {
-	this.responseFields.put(GeneralResponseEntity.CONTENT_LENGTH,
+	this.responseFields.put(EntityFields.CONTENT_LENGTH,
 	        String.valueOf(contentLength));
 	return this;
     }
 
-    public HttpResponseBuilder withConnectionStatus(String connectionStatus) {
-	this.responseFields.put(GeneralResponseEntity.CONNECTION_STATUS,
-	        connectionStatus);
+    public HttpResponseBuilder withConnectionStatus(String connection) {
+	this.responseFields.put(GeneralFields.CONNECTION, connection);
 	return this;
     }
 
     public HttpResponseBuilder lastModified(String lastModified) {
-	this.responseFields.put(GeneralResponseEntity.LAST_MODIFIED,
-	        lastModified);
+	this.responseFields.put(EntityFields.LAST_MODIFIED, lastModified);
 	return this;
     }
 
-    public HttpResponseBuilder withEtag(String eTag) {
-	this.responseFields.put(GeneralResponseEntity.ETAG,
-	        eTag);
+    public HttpResponseBuilder withEtag(String entityTag) {
+	this.responseFields.put(ResponseFields.ETAG, entityTag);
 	return this;
     }
 
     public HttpResponseBuilder acceptRanges(String acceptRanges) {
-	this.responseFields.put(GeneralResponseEntity.ACCEPT_RANGES,
-	        acceptRanges);
+	this.responseFields.put(ResponseFields.ACCEPT_RANGES, acceptRanges);
 	return this;
     }
 
     public HttpResponseBuilder vary(String vary) {
-	this.responseFields.put(GeneralResponseEntity.VARY,
-	        vary);
+	this.responseFields.put(ResponseFields.VARY, vary);
 	return this;
     }
 
-    public HttpResponseBuilder xPoweredBy(String xPoweredBy) {
-	this.responseFields.put(GeneralResponseEntity.X_POWERED_BY,
-	        xPoweredBy);
-	return this;
-    }
-
-    public HttpResponseBuilder keepAlive(String keepAlive) {
-	this.responseFields.put(GeneralResponseEntity.KEEP_ALIVE,
-	        keepAlive);
-	return this;
-    }
 
     public HttpResponseBuilder withPayload(byte[] payload) {
 	this.payload = payload;
+	return this;
+    }
+
+    public HttpResponseBuilder addMessageField(MessageField field, String value) {
+	this.responseFields.put(field, value);
 	return this;
     }
 
@@ -110,7 +98,7 @@ class HttpResponseBuilder {
 	HttpResponse response = new HttpResponse(protocolVersionText(),
 	        statusCode(), reasonPhrase(), payload);
 
-	for (Entry<GeneralResponseEntity, String> e : responseFields
+	for (Entry<MessageField, String> e : responseFields
 	        .entrySet()) {
 	    response.addResponseFieldWithValue(e.getKey(), e.getValue());
 	}

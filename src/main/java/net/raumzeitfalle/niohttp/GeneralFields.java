@@ -48,4 +48,13 @@ public enum GeneralFields implements MessageField {
 	}
 	throw new RuntimeException("Unknown HTTP header general field");
     }
+
+    public static boolean isGeneralField(final String lineFromBytes) {
+	for (GeneralFields generalField : values()) {
+	    if (lineFromBytes.trim().toLowerCase().startsWith(generalField.fieldName.toLowerCase())) {
+		return true;
+	    }
+	}
+	return false;
+    }
 }

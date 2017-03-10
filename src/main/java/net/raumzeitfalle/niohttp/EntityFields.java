@@ -52,4 +52,13 @@ public enum EntityFields implements MessageField {
 	}
 	throw new RuntimeException("Unknown HTTP header entity field");
     }
+
+    public static boolean isEntityField(final String lineFromBytes) {
+	for (EntityFields entityField : values()) {
+	    if (lineFromBytes.trim().toLowerCase().startsWith(entityField.fieldName.toLowerCase())) {
+		return true;
+	    }
+	}
+	return false;
+    }
 }

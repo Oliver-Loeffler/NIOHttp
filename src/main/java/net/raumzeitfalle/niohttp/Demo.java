@@ -7,11 +7,11 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
 /**
- * Requires a web server near by, will issue a bad request. Then a HttpResponse
- * object is created and printed to System.out. The bad request works currently
- * only on my Nginx 1.10.2 running on a Raspberry Pi.
+ * Writes a HTTP request to www.raumzeitfalle.net/ using Java NIO SocketChannel.
+ * When reachable, domain front page HTML content is delivered and partially
+ * printed on System.out.<br>
+ * Yet, only the first 1024 bytes of the HTTP response are read.
  *
- * @author oliver
  */
 class Demo {
 
@@ -89,12 +89,11 @@ class Demo {
         String request = new StringBuilder("GET").append(SPACE)
                 .append(this.url.getPath()).append(SPACE).append("HTTP/1.1")
                 .append(CRLF)
-                .append("User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)")
+		.append("User-Agent: NIOHttp/0.1 Java")
                 .append(CRLF)
                 .append("Host:").append(SPACE).append(this.url.getHost())
                 .append(CRLF)
                 .append("Accept-Language: en-us").append(CRLF)
-                // .append("Accept-Encoding: gzip, deflate").append(CRLF)
                 .append("Connection: Keep-Alive").append(CRLF).append(CRLF)
                 .toString();
 

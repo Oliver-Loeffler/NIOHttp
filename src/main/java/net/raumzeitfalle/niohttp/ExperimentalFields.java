@@ -2,20 +2,20 @@ package net.raumzeitfalle.niohttp;
 
 import java.util.Objects;
 
-class ExperimentalFields implements MessageField, Comparable<ExperimentalFields> {
+class ExperimentalFields implements MessageField {
 
     private final String name;
 
     /**
-     * @param line
+     * @param lineFromBytes
      *            with field name and field values (e.g.
      *            x-non-standard-field-name : value)
      * @throws RuntimeException
      *             when field name length is 0
      */
-    public static ExperimentalFields fromLine(String line) {
+    public static ExperimentalFields fromLine(String lineFromBytes) {
 	return new ExperimentalFields(
-		parseFieldNameFrom(Objects.requireNonNull(line, "line from HTTP message must not be null")));
+		parseFieldNameFrom(Objects.requireNonNull(lineFromBytes, "line from HTTP message must not be null")));
     }
     
     /**
@@ -44,8 +44,4 @@ class ExperimentalFields implements MessageField, Comparable<ExperimentalFields>
 	throw new RuntimeException("HTTP message contained a line with a zero length field name.");
     }
     
-    @Override
-    public int compareTo(ExperimentalFields o) {
-	return this.toString().toLowerCase().compareTo(o.toString().toLowerCase());
-    }
 }

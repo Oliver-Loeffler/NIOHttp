@@ -16,7 +16,7 @@ class HttpResponse {
 
     private final byte[] payload;
 
-    private final Map<GeneralResponseEntity, String> responseFields = new TreeMap<>();
+    private final Map<MessageField, String> responseFields = new TreeMap<>(new MessageFieldComparator());
 
     public HttpResponse(final String protocolVersion, final String statusCode,
                  final String reasonPhrase, final byte[] payload) {
@@ -32,7 +32,7 @@ class HttpResponse {
                 .append(statusCode)
                 .append(SPACE).append(reasonPhrase).append(CRLF);
 
-        for (Entry<GeneralResponseEntity, String> e : responseFields
+	for (Entry<MessageField, String> e : responseFields
                 .entrySet()) {
             addResponseFieldContent(b, e.getKey());
         }
@@ -49,13 +49,13 @@ class HttpResponse {
         return toString().getBytes();
     }
 
-    protected void addResponseFieldWithValue(GeneralResponseEntity field,
+    protected void addResponseFieldWithValue(MessageField field,
                                              String value) {
         this.responseFields.put(field, value);
     }
 
     private void addResponseFieldContent(StringBuilder b,
-                                         GeneralResponseEntity responseField) {
+	    MessageField responseField) {
         Objects.requireNonNull(b, "String builder should not be null");
         Objects.requireNonNull(responseField, "responseField builder should not be null");
         if (this.responseFields.containsKey(responseField)) {
@@ -89,10 +89,9 @@ class HttpResponse {
         int lineIndex = 1;
         String line = responseLines[lineIndex];
         while (!line.isEmpty()) {
-            GeneralResponseEntity g = GeneralResponseEntity.fromString(line);
+	    MessageField messageField = MessageFieldFactory.getInstance().fromString(line);
             int separation = line.indexOf(SPACE) + 1;
-            g.callHttpResponseBuilderWhenSupported(responseBuilder,
-                    line.substring(separation, line.length()));
+	    responseBuilder.addMessageField(messageField, line.substring(separation, line.length()));
             line = responseLines[lineIndex++];
         }
 
