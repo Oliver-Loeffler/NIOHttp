@@ -4,4 +4,4 @@ jdk:
   - oraclejdk8
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash) -t c0381ce1-44da-43fb-ac76-00eec9f19e88
