@@ -18,21 +18,25 @@ class HttpResponseReader {
 
     public void read(final Consumer<HttpResponse> responseConsumer) throws IOException {
 	Objects.requireNonNull(responseConsumer, "responseConsumer should not be null");
-	readBytesFromChannel();
-
-	HttpResponse response = HttpResponse.fromBytes(this.bytesRead);
-	responseConsumer.accept(response);
+	while (this.channel.isOpen()) {
+	    readBytesFromChannel();
+	    HttpResponse response = HttpResponse.fromBytes(this.bytesRead);
+	    responseConsumer.accept(response);
+	}
     }
 
     private void readBytesFromChannel() throws IOException {
+	this.bytesRead = new byte[0];
 	int numberOfBytesRead = 0;
 	int byteBufferSize = 48;
 	ByteBuffer inputBuffer = ByteBuffer.allocate(byteBufferSize);
 	do {
 	    inputBuffer.clear();
 	    numberOfBytesRead = channel.read(inputBuffer);
-	    this.bytesRead = mergeArrays(this.bytesRead, inputBuffer.array(), numberOfBytesRead);
-	} while (numberOfBytesRead == byteBufferSize);
+	    if (numberOfBytesRead > -1) {
+		this.bytesRead = mergeArrays(this.bytesRead, inputBuffer.array(), numberOfBytesRead);
+	    }
+	} while (numberOfBytesRead <= byteBufferSize && numberOfBytesRead > -1);
     }
 
     /**
