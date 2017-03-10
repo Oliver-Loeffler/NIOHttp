@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 class HttpResponseReader {
@@ -18,11 +19,11 @@ class HttpResponseReader {
 
     public void read(final Consumer<HttpResponse> responseConsumer) throws IOException {
 	Objects.requireNonNull(responseConsumer, "responseConsumer should not be null");
-	while (this.channel.isOpen()) {
-	    readBytesFromChannel();
-	    HttpResponse response = HttpResponse.fromBytes(this.bytesRead);
-	    responseConsumer.accept(response);
-	}
+	// while (this.channel.isOpen()) {
+	readBytesFromChannel();
+	Optional<HttpResponse> response = HttpResponse.fromBytes(this.bytesRead);
+	response.ifPresent(responseConsumer);
+	// }
     }
 
     private void readBytesFromChannel() throws IOException {
@@ -33,17 +34,10 @@ class HttpResponseReader {
 	do {
 	    inputBuffer.clear();
 	    numberOfBytesRead = channel.read(inputBuffer);
-	    if (numberOfBytesRead > -1) {
+	    if (numberOfBytesRead > 0) {
 		this.bytesRead = mergeArrays(this.bytesRead, inputBuffer.array(), numberOfBytesRead);
 	    }
-	} while (numberOfBytesRead <= byteBufferSize && numberOfBytesRead > -1);
-    }
-
-    /**
-     * @return bytes read from buffer
-     */
-    protected byte[] getBytesRead() {
-	return this.bytesRead;
+	} while (numberOfBytesRead > 0);
     }
 
     private byte[] mergeArrays(byte[] oldBytes, byte[] newBytes, int numberOfNewBytesToConsider) {

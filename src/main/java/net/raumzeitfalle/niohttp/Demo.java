@@ -20,9 +20,10 @@ class Demo {
 
     public static void main(String args[]) throws IOException {
 
-	String address = "http://www.raumzeitfalle.net";
+	String address = "http://www.raumzeitfalle.net/";
 	Demo demo = new Demo(address);
 	demo.run(r -> {
+	    sysout(r.responseHeader().getBytes(), "Response Header");
 	    sysout(r.getPayload(), "Response Payload");
 	});
 
@@ -57,7 +58,7 @@ class Demo {
      */
     public void run(Consumer<HttpResponse> responseConsumer) throws IOException {
 	try (SocketChannel socketChannel = SocketChannel.open(this.address)) {
-
+	    socketChannel.configureBlocking(true);
 	    writeGetRequestToChannel(socketChannel);
 	    readResponseFromChannel(socketChannel, responseConsumer);
 	}
@@ -71,10 +72,14 @@ class Demo {
     }
 
     private static void sysout(byte[] bytes, String title) {
-	StringBuilder out = new StringBuilder(title + ":").append(System.lineSeparator()).append(System.lineSeparator())
-		.append(new String(bytes)).append(System.lineSeparator()).append(System.lineSeparator())
-		.append(System.lineSeparator());
-	System.out.println(out);
+	StringBuilder out = new StringBuilder(title).append(System.lineSeparator());
+	for (int i = 0; i < title.toCharArray().length; i++) {
+	    out.append('-');
+	}
+
+	out.append(System.lineSeparator()).append(new String(bytes)).append(System.lineSeparator())
+		.append(System.lineSeparator()).append(System.lineSeparator());
+	System.out.println(out.toString());
     }
 
     private void writeGetRequestToChannel(ByteChannel channel) throws IOException {

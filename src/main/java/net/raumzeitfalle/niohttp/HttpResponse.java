@@ -3,6 +3,7 @@ package net.raumzeitfalle.niohttp;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.TreeMap;
 
 import static net.raumzeitfalle.niohttp.Constants.CRLF;
@@ -32,6 +33,19 @@ class HttpResponse {
 
     @Override
     public String toString() {
+	StringBuilder b = new StringBuilder(responseHeader());
+
+	if (this.payload.length > 0) {
+	    b.append(new String(payload));
+	}
+
+	return b.toString();
+    }
+
+    /**
+     * @return String representation of response header
+     */
+    public String responseHeader() {
 	StringBuilder b = new StringBuilder(protocolVersion).append(SPACE).append(statusCode).append(SPACE)
 		.append(reasonPhrase).append(CRLF);
 
@@ -39,11 +53,6 @@ class HttpResponse {
 	    addResponseFieldContent(b, e.getKey());
 	}
 	b.append(CRLF);
-
-	if (this.payload.length > 0) {
-	    b.append(new String(payload));
-	}
-
 	return b.toString();
     }
 
@@ -70,10 +79,19 @@ class HttpResponse {
      * @param bytes
      * @return HttpResponse object
      */
-    public static HttpResponse fromBytes(byte[] bytes) {
+    public static Optional<HttpResponse> fromBytes(byte[] bytes) {
 	String[] responseLines = new String(bytes).split(CRLF);
 
 	int firstSpace = responseLines[0].indexOf(SPACE);
+
+	/*
+	 * TODO: This way of protocol detection (if message header is correct)
+	 * is most likely fragile and error prone - implement better
+	 * methodology.
+	 */
+	if (firstSpace < 0)
+	    return Optional.empty();
+
 	String protocol = responseLines[0].substring(0, firstSpace);
 	String statusCodeAndReason = responseLines[0].substring(firstSpace + 1, responseLines[0].length());
 	int secondSpace = statusCodeAndReason.indexOf(SPACE);
@@ -99,7 +117,7 @@ class HttpResponse {
 	    System.arraycopy(bytes, firstPayloadByte, payloadBytes, 0, payloadBytes.length);
 	    responseBuilder.withPayload(payloadBytes);
 	}
-	return responseBuilder.build();
+	return Optional.of(responseBuilder.build());
     }
 
     private static int findFirstPayloadByteIndex(byte[] bytes) {
