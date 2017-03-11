@@ -19,32 +19,51 @@ class HttpResponseReader {
 
     public void read(final Consumer<HttpResponse> responseConsumer) throws IOException {
 	Objects.requireNonNull(responseConsumer, "responseConsumer should not be null");
-	// while (this.channel.isOpen()) {
-	readBytesFromChannel();
-	Optional<HttpResponse> response = HttpResponse.fromBytes(this.bytesRead);
-	response.ifPresent(responseConsumer);
-	// }
-    }
 
-    private void readBytesFromChannel() throws IOException {
-	this.bytesRead = new byte[0];
-	int numberOfBytesRead = 0;
-	int byteBufferSize = 48;
-	ByteBuffer inputBuffer = ByteBuffer.allocate(byteBufferSize);
-	do {
-	    inputBuffer.clear();
-	    numberOfBytesRead = channel.read(inputBuffer);
-	    if (numberOfBytesRead > 0) {
-		this.bytesRead = mergeArrays(this.bytesRead, inputBuffer.array(), numberOfBytesRead);
+	int read = 0;
+	ByteBuffer inputBuffer = ByteBuffer.allocate(48);
+	while (read >= 0) {
+	    read = channel.read(inputBuffer);
+
+	    byte[] newBytesRead = inputBuffer.array();
+	    byte[] merge = new byte[bytesRead.length + newBytesRead.length];
+
+	    int index = 0;
+	    for (byte b : bytesRead) {
+		merge[index] = b;
+		index++;
 	    }
-	} while (numberOfBytesRead > 0);
+	    for (byte b : newBytesRead) {
+		merge[index] = b;
+		index++;
+	    }
+	    bytesRead = merge;
+	    inputBuffer.clear();
+
+	    for (int i = 1; i < bytesRead.length; i++) {
+		if (read == -1) {
+		    byte[] responseBytes = new byte[i];
+
+		    for (int j = 0; j <= i; j++) {
+			responseBytes[j] = bytesRead[j];
+		    }
+		    Optional<HttpResponse> response = HttpResponse.fromBytes(responseBytes);
+		    response.ifPresent(responseConsumer);
+
+		    byte[] unusedBytes = new byte[bytesRead.length - responseBytes.length];
+		    for (int j = responseBytes.length; j < bytesRead.length; j++) {
+			unusedBytes[j] = bytesRead[j];
+		    }
+		    bytesRead = unusedBytes;
+		}
+	    }
+	}
     }
 
-    private byte[] mergeArrays(byte[] oldBytes, byte[] newBytes, int numberOfNewBytesToConsider) {
-	assert (numberOfNewBytesToConsider <= newBytes.length);
-	byte[] result = new byte[oldBytes.length + numberOfNewBytesToConsider];
-	System.arraycopy(oldBytes, 0, result, 0, oldBytes.length);
-	System.arraycopy(newBytes, 0, result, oldBytes.length, numberOfNewBytesToConsider);
-	return result;
+    /**
+     * @return bytes read from buffer
+     */
+    protected byte[] getBytesRead() {
+	return this.bytesRead;
     }
 }
