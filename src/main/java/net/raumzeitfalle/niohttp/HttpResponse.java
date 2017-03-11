@@ -25,10 +25,9 @@ class HttpResponse {
 	this.statusCode = Objects.requireNonNull(statusCode, "statusCode should not be null");
 	this.reasonPhrase = Objects.requireNonNull(reasonPhrase, "reasonPhrase should not be null");
 	this.payload = Objects.requireNonNull(payload, "payload should not be null");
-    }
 
     public byte[] getPayload() {
-	return this.payload;
+	   return this.payload;
     }
 
     @Override
@@ -74,10 +73,12 @@ class HttpResponse {
     }
 
     /**
-     * Factory method creating a {@link HttpResponse} object from a byte array.
+     * Factory method creating a {@link HttpResponse} a single HttpResponse
+     * object from a byte array which is assumed to be complete (no missing
+     * bytes).
      *
      * @param bytes
-     * @return HttpResponse object
+     * @return HttpResponse
      */
     public static Optional<HttpResponse> fromBytes(byte[] bytes) {
 	String[] responseLines = new String(bytes).split(CRLF);
