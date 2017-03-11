@@ -12,9 +12,7 @@ import java.util.Objects;
  *      "http://httpwg.org/specs/rfc7230.html#status.line">http://httpwg.org/specs/rfc7230.html#status.line</a>
  * 
  */
-class StatusLine {
-
-    private static final String COULD_NOT_PARSE_MESSAGE = "could not parse protocol and protocol version from message";
+public class StatusLine {
 
     private final String protocolVersion;
 
@@ -76,7 +74,7 @@ class StatusLine {
 
     private String assertNoLeadingAndTrailingBWS(String protocolVersion) {
 	if (protocolVersion.length() > protocolVersion.trim().length()) {
-	    throw new HttpMessageParsingException(COULD_NOT_PARSE_MESSAGE);
+	    throw new HttpMessageParsingException("could not parse protocol from message");
 	}
 	return protocolVersion;
     }
@@ -84,7 +82,7 @@ class StatusLine {
     private int indexOfFirstSpace(final String line) {
 	int firstSpace = line.indexOf(Constants.SPACE);
 	if (firstSpace < 1) {
-	    throw new HttpMessageParsingException(COULD_NOT_PARSE_MESSAGE);
+	    throw new HttpMessageParsingException("could not parse protocol from message");
 	}
 	return firstSpace;
     }

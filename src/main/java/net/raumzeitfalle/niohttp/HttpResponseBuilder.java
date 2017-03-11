@@ -10,7 +10,7 @@ import java.util.Objects;
  * @author oliver
  *
  */
-class HttpResponseBuilder {
+public class HttpResponseBuilder {
 
     private final StatusLine statusLine;
 
