@@ -3,7 +3,8 @@ package net.raumzeitfalle.niohttp;
 import java.util.Objects;
 
 /**
- * Applicable specification: RFC7230, RFC2616 has been superseded.
+ * Experimental header fields (or up to now: all header fields which are not
+ * known as a type).
  *
  */
 class ExperimentalFields implements HeaderField {

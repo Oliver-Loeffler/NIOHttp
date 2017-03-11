@@ -1,6 +1,5 @@
 package net.raumzeitfalle.niohttp;
 
-import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
 import java.util.Arrays;
@@ -34,7 +33,7 @@ public class GeneralFieldsParametrizedTest {
 
     @Test
     public void fieldFromString() {
-	assertThat(GeneralFields.fromString(this.messageFieldName), is(this.expectation));
+	assertEquals(this.expectation, GeneralFields.fromString(this.messageFieldName));
     }
 
 }

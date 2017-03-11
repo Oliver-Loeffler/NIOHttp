@@ -3,8 +3,7 @@ package net.raumzeitfalle.niohttp;
 import java.util.Objects;
 
 /**
- * Applicable specification: RFC7230, RFC2616 has been superseded. HTTP 1.1
- * RFC2616 section 4.5 defines following fields for general applicability:
+ * Message header fields of general applicability:
  * <ul>
  * <li>Cache-Control</li>
  * <li>Connection</li>
