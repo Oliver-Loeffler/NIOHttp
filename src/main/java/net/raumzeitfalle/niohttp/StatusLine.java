@@ -99,7 +99,7 @@ public class StatusLine {
     }
 
     private int ensureStatusCodeDigits(int code) {
-	if (code < 100 || code > 999) {
+	if (code < 100 || code > 599) {
 	    throw new HttpMessageParsingException("status code must have exactly 3 digits");
 	}
 	return code;
