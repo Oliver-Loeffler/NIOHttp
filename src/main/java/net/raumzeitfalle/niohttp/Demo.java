@@ -9,6 +9,9 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.ByteChannel;
 import java.nio.channels.SocketChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.function.Consumer;
 
 /**
@@ -20,11 +23,13 @@ class Demo {
 
     public static void main(String args[]) throws IOException {
 
-	String address = "http://www.raumzeitfalle.net/";
+	String address = "http://www.raumzeitfalle.de/";
 	Demo demo = new Demo(address);
 	demo.run(r -> {
 	    sysout(r.responseHeader().getBytes(), "Response Header");
 	    sysout(r.getPayload(), "Response Payload");
+	    // writeToFile(r.getPayload(), "payload.html");
+	    // writeToFile(r.getBytes(), "Response.txt");
 	});
 
     }
@@ -80,6 +85,15 @@ class Demo {
 	out.append(System.lineSeparator()).append(new String(bytes)).append(System.lineSeparator())
 		.append(System.lineSeparator()).append(System.lineSeparator());
 	System.out.println(out.toString());
+    }
+
+    private static void writeToFile(byte[] payload, String filename) {
+	Path path = Paths.get(filename);
+	try {
+	    Files.write(path, payload);
+	} catch (IOException e) {
+	    System.err.println("Could not write payload to file: " + path.toAbsolutePath().toString());
+	}
     }
 
     private void writeGetRequestToChannel(ByteChannel channel) throws IOException {
