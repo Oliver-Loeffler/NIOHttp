@@ -28,10 +28,18 @@ class Demo {
 	demo.run(r -> {
 	    sysout(r.responseHeader().getBytes(), "Response Header");
 	    sysout(r.getPayload(), "Response Payload");
-	    // writeToFile(r.getPayload(), "payload.html");
-	    // writeToFile(r.getBytes(), "Response.txt");
+	    writeToFile(r.responseHeader().getBytes(), "header.txt");
+	    writeToFile(r.getPayload(), "payload.txt");
 	});
 
+	// Server actually forwards to HTTPS, the response has no message body,
+	// no payload
+	String addressWhichWillCauseException = "http://de.wikipedia.org/wiki/Byte_Order_Mark";
+	demo = new Demo(addressWhichWillCauseException);
+	demo.run(r -> {
+	    sysout(r.responseHeader().getBytes(), "Response Header");
+
+	});
     }
 
     private final SocketAddress address;
@@ -41,17 +49,9 @@ class Demo {
     private int port;
 
     public Demo(final String address) throws MalformedURLException {
-	this.url = checkAndFixURL(address);
+	this.url = new URL(address);
 	this.port = this.url.getDefaultPort();
 	this.address = new InetSocketAddress(this.url.getHost(), this.port);
-    }
-
-    private URL checkAndFixURL(final String address) throws MalformedURLException {
-	URL url = new URL(address);
-	if (url.getPath().isEmpty()) {
-	    return new URL(address + "/");
-	}
-	return url;
     }
 
     /**
@@ -107,7 +107,7 @@ class Demo {
                 .append("Host:").append(SPACE).append(url.getHost())
                 .append(CRLF)
                 .append("Accept-Language: en-us").append(CRLF)
-                .append("Connection: Keep-Alive").append(CRLF).append(CRLF)
+                .append("Connection: close").append(CRLF).append(CRLF)
                 .toString();
         // @formatter:on
 
