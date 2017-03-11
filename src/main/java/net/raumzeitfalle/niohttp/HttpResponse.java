@@ -80,6 +80,7 @@ public class HttpResponse {
      * Factory method creating a {@link HttpResponse} object from a byte array.
      *
      * @param bytes
+     *            byte array read from a channel
      * @return HttpResponse object
      */
     public static Optional<HttpResponse> fromBytes(byte[] bytes) {

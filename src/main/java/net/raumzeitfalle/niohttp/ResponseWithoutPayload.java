@@ -29,6 +29,7 @@ class ResponseWithoutPayload implements HttpResponseTemplate {
      * As this template requires no payload, the payload parameter is ignore.
      * 
      * @param payload
+     *            byte array from channel
      */
     @Override
     public HttpResponseTemplate withPayload(byte[] payload) {

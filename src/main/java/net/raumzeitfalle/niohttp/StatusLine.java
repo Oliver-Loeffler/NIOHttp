@@ -44,6 +44,8 @@ class StatusLine {
      * Parses a message and creates a corresponding StatusLine instance.
      * 
      * @param message
+     *            message obtained by converting a byte[] from a channel to a
+     *            String
      */
     public StatusLine(final String message) {
 	Objects.requireNonNull(message, "message must not be null");

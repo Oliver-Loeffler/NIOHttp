@@ -14,6 +14,7 @@ class ExperimentalFields implements HeaderField {
      * @param lineFromBytes
      *            with field name and field values (e.g.
      *            x-non-standard-field-name : value)
+     * @return object for header field which is not supported by HTTP by default
      * @throws RuntimeException
      *             when field name length is 0
      */
@@ -21,7 +22,7 @@ class ExperimentalFields implements HeaderField {
 	return new ExperimentalFields(
 		parseFieldNameFrom(Objects.requireNonNull(lineFromBytes, "line from HTTP message must not be null")));
     }
-    
+
     /**
      * @param name
      *            of the new experimental field to be created
@@ -47,5 +48,5 @@ class ExperimentalFields implements HeaderField {
 	}
 	throw new RuntimeException("HTTP message contained a line with a zero length field name.");
     }
-    
+
 }
