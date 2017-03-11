@@ -3,6 +3,7 @@ package net.raumzeitfalle.niohttp;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.TreeMap;
 
 import static net.raumzeitfalle.niohttp.Constants.CRLF;
@@ -26,8 +27,25 @@ class HttpResponse {
 	this.payload = Objects.requireNonNull(payload, "payload should not be null");
     }
 
+    public byte[] getPayload() {
+	return this.payload;
+    }
+
     @Override
     public String toString() {
+	StringBuilder b = new StringBuilder(responseHeader());
+
+	if (this.payload.length > 0) {
+	    b.append(new String(payload));
+	}
+
+	return b.toString();
+    }
+
+    /**
+     * @return String representation of response header
+     */
+    public String responseHeader() {
 	StringBuilder b = new StringBuilder(protocolVersion).append(SPACE).append(statusCode).append(SPACE)
 		.append(reasonPhrase).append(CRLF);
 
@@ -35,11 +53,6 @@ class HttpResponse {
 	    addResponseFieldContent(b, e.getKey());
 	}
 	b.append(CRLF);
-
-	if (this.payload.length > 0) {
-	    b.append(new String(payload));
-	}
-
 	return b.toString();
     }
 
@@ -61,17 +74,24 @@ class HttpResponse {
     }
 
     /**
-     * Factory method creating a {@link HttpResponse} a single HttpResponse
-     * object from a byte array which is assumed to be complete (no missing
-     * bytes).
+     * Factory method creating a {@link HttpResponse} object from a byte array.
      *
      * @param bytes
-     * @return HttpResponse
+     * @return HttpResponse object
      */
-    public static HttpResponse fromBytes(byte[] bytes) {
+    public static Optional<HttpResponse> fromBytes(byte[] bytes) {
 	String[] responseLines = new String(bytes).split(CRLF);
 
 	int firstSpace = responseLines[0].indexOf(SPACE);
+
+	/*
+	 * TODO: This way of protocol detection (if message header is correct)
+	 * is most likely fragile and error prone - implement better
+	 * methodology.
+	 */
+	if (firstSpace < 0)
+	    return Optional.empty();
+
 	String protocol = responseLines[0].substring(0, firstSpace);
 	String statusCodeAndReason = responseLines[0].substring(firstSpace + 1, responseLines[0].length());
 	int secondSpace = statusCodeAndReason.indexOf(SPACE);
@@ -90,14 +110,31 @@ class HttpResponse {
 	    line = responseLines[lineIndex++];
 	}
 
-	StringBuilder payloadBuilder = new StringBuilder();
-	while (lineIndex < responseLines.length) {
-	    payloadBuilder.append(responseLines[lineIndex++]);
-	    if (lineIndex < responseLines.length) {
-		payloadBuilder.append(CRLF);
-	    }
+	int firstPayloadByte = findFirstPayloadByteIndex(bytes);
+
+	if (firstPayloadByte < bytes.length) {
+	    byte[] payloadBytes = new byte[bytes.length - firstPayloadByte];
+	    System.arraycopy(bytes, firstPayloadByte, payloadBytes, 0, payloadBytes.length);
+	    responseBuilder.withPayload(payloadBytes);
 	}
-	responseBuilder.withPayload(payloadBuilder.toString().getBytes());
-	return responseBuilder.build();
+	return Optional.of(responseBuilder.build());
+    }
+
+    private static int findFirstPayloadByteIndex(byte[] bytes) {
+	int firstPayloadByte = 0;
+	while (firstPayloadByte < bytes.length) {
+	    if (firstPayloadByte > 3 && carriageReturnLineFeedTwoTimes(bytes, firstPayloadByte)) {
+		firstPayloadByte++;
+		break;
+	    }
+	    firstPayloadByte++;
+	}
+	return firstPayloadByte;
+    }
+
+    private static boolean carriageReturnLineFeedTwoTimes(byte[] bytes, int i) {
+	byte CR = 13;
+	byte LF = 10;
+	return bytes[i - 3] == CR && bytes[i - 2] == LF && bytes[i - 1] == CR && bytes[i] == LF;
     }
 }
