@@ -11,9 +11,7 @@ import static net.raumzeitfalle.niohttp.Constants.SPACE;
 
 class HttpResponse {
 
-    private final String protocolVersion;
-    private final String statusCode;
-    private final String reasonPhrase;
+    private final StatusLine statusLine;
 
     private final byte[] payload;
 
@@ -21,9 +19,11 @@ class HttpResponse {
 
     public HttpResponse(final String protocolVersion, final String statusCode, final String reasonPhrase,
 	    final byte[] payload) {
-	this.protocolVersion = Objects.requireNonNull(protocolVersion, "protocolVersion should not be null");
-	this.statusCode = Objects.requireNonNull(statusCode, "statusCode should not be null");
-	this.reasonPhrase = Objects.requireNonNull(reasonPhrase, "reasonPhrase should not be null");
+
+	this.statusLine = new StatusLine(Objects.requireNonNull(protocolVersion, "protocolVersion should not be null"),
+		Objects.requireNonNull(statusCode, "statusCode should not be null"),
+		Objects.requireNonNull(reasonPhrase, "reasonPhrase should not be null"));
+
 	this.payload = Objects.requireNonNull(payload, "payload should not be null");
     }
 
@@ -46,9 +46,7 @@ class HttpResponse {
      * @return String representation of response header
      */
     public String responseHeader() {
-	StringBuilder b = new StringBuilder(protocolVersion).append(SPACE).append(statusCode).append(SPACE)
-		.append(reasonPhrase).append(CRLF);
-
+	StringBuilder b = new StringBuilder(this.statusLine.toString());
 	for (Entry<HeaderField, String> e : responseFields.entrySet()) {
 	    addResponseFieldContent(b, e.getKey());
 	}
