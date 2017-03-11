@@ -56,3 +56,7 @@ Building HTTP request and response objects which can be written and read from ja
 ### HTTP over TLS (transport layer security)
 
 * https://tools.ietf.org/html/rfc2818#section-2
+
+### Other helpful references
+
+ * As RFC7230 uses the term ABNF, here the explanation: https://en.wikipedia.org/wiki/Augmented_Backus–Naur_form
