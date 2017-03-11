@@ -1,6 +1,6 @@
 package net.raumzeitfalle.niohttp;
 
-class HttpMessageParsingException extends RuntimeException {
+public class HttpMessageParsingException extends RuntimeException {
 
     private static final long serialVersionUID = -3767246146751224818L;
 

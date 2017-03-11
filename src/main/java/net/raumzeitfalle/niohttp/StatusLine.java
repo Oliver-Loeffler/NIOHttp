@@ -37,7 +37,7 @@ class StatusLine {
     public StatusLine(final String protocolVersion, final String statusCode, final String reasonPhrase) {
 	this.protocolVersion = assertNoLeadingAndTrailingBWS(protocolVersion);
 	this.statusCode = converStatusCodeAndEnsureDigits(statusCode);
-	this.reasonPhrase = ensureCorrectReasonPhrase(reasonPhrase, 0);
+	this.reasonPhrase = ensureReasonPhraseHasNoBadChars(reasonPhrase);
     }
 
     /**
@@ -59,12 +59,15 @@ class StatusLine {
 	return this.protocolVersion;
     }
 
+    /**
+     * @return HTTP status codes such as 400, 404 or 501.
+     */
     public int statusCode() {
 	return this.statusCode;
     }
 
     private String parseProtocolVersion(final String line) {
-	int firstSpace = findFirstSpace(line);
+	int firstSpace = indexOfFirstSpace(line);
 	String protocolVersion = line.substring(0, firstSpace);
 	return assertNoLeadingAndTrailingBWS(protocolVersion);
     }
@@ -76,7 +79,7 @@ class StatusLine {
 	return protocolVersion;
     }
 
-    private int findFirstSpace(final String line) {
+    private int indexOfFirstSpace(final String line) {
 	int firstSpace = line.indexOf(Constants.SPACE);
 	if (firstSpace < 1) {
 	    throw new HttpMessageParsingException(COULD_NOT_PARSE_MESSAGE);
@@ -84,9 +87,15 @@ class StatusLine {
 	return firstSpace;
     }
 
+    private int indexAfterFirstSpace(final String line) {
+	return indexOfFirstSpace(line) + 1;
+    }
+
     private int parseStatusCode(final String line) {
-	int firstSpace = findFirstSpace(line);
-	return converStatusCodeAndEnsureDigits(line.substring(firstSpace + 1, firstSpace + 4));
+	int digits = 3;
+	int index = indexAfterFirstSpace(line);
+	String statusCode = line.substring(index, index + digits);
+	return converStatusCodeAndEnsureDigits(statusCode);
     }
 
     private int ensureStatusCodeDigits(int code) {
@@ -104,30 +113,31 @@ class StatusLine {
 	}
     }
 
-    private String ensureCorrectReasonPhrase(final String reasonPhrase, int beginIndex) {
-	return trimAndEnsureNotEmpty(extractTextUntilFirstCRLF(reasonPhrase, beginIndex), beginIndex);
+    private String ensureReasonPhraseHasNoBadChars(final String reasonPhrase) {
+	return trimAndEnsureNotEmpty(extractTextUntilFirstCRLF(reasonPhrase));
     }
 
     private String parseReasonPhrase(final String line) {
-	int fixedOffsetToReasonPhrase = 5;
-	int firstReasonPhraseChar = findFirstSpace(line) + fixedOffsetToReasonPhrase;
-	return ensureCorrectReasonPhrase(line, firstReasonPhraseChar);
+	int index = indexAfterFirstSpace(line);
+	String candidate = line.substring(index);
+	index = indexAfterFirstSpace(candidate);
+	return ensureReasonPhraseHasNoBadChars(candidate.substring(index));
     }
 
-    private String trimAndEnsureNotEmpty(final String line, int firstReasonPhraseChar) {
-	String phrase = extractTextUntilFirstCRLF(line, firstReasonPhraseChar);
+    private String trimAndEnsureNotEmpty(final String line) {
+	String phrase = extractTextUntilFirstCRLF(line);
 	if (phrase.isEmpty()) {
 	    throw new HttpMessageParsingException("could not parse reason phrase from HTTP status line");
 	}
 	return phrase;
     }
 
-    private String extractTextUntilFirstCRLF(final String line, int firstReasonPhraseChar) {
+    private String extractTextUntilFirstCRLF(final String line) {
 	int firstLineBreak = line.indexOf(Constants.CRLF);
 	if (firstLineBreak == -1) {
-	    return line.substring(0, line.length());
+	    return line;
 	}
-	return line.substring(firstReasonPhraseChar, firstLineBreak);
+	return line.substring(0, firstLineBreak);
     }
 
     public String reasonPhrase() {

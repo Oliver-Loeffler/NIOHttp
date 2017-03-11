@@ -9,13 +9,18 @@ import java.util.TreeMap;
 import static net.raumzeitfalle.niohttp.Constants.CRLF;
 import static net.raumzeitfalle.niohttp.Constants.SPACE;
 
-class HttpResponse {
+public class HttpResponse {
 
     private final StatusLine statusLine;
 
     private final byte[] payload;
 
     private final Map<HeaderField, String> responseFields = new TreeMap<>(new HeaderFieldComparator());
+
+    public HttpResponse(final StatusLine statusLine, final byte[] payload) {
+	this.statusLine = Objects.requireNonNull(statusLine, "statusLine must nut be null");
+	this.payload = Objects.requireNonNull(payload, "payload should not be null");
+    }
 
     public HttpResponse(final String protocolVersion, final String statusCode, final String reasonPhrase,
 	    final byte[] payload) {
@@ -58,7 +63,7 @@ class HttpResponse {
 	return toString().getBytes();
     }
 
-    protected void addResponseFieldWithValue(final HeaderField field, final String value) {
+    public void addResponseFieldWithValue(final HeaderField field, final String value) {
 	this.responseFields.put(field, Objects.requireNonNull(value, "value assigned to a field must not be null"));
     }
 
@@ -80,24 +85,8 @@ class HttpResponse {
     public static Optional<HttpResponse> fromBytes(byte[] bytes) {
 	String[] responseLines = new String(bytes).split(CRLF);
 
-	int firstSpace = responseLines[0].indexOf(SPACE);
-
-	/*
-	 * TODO: This way of protocol detection (if message header is correct)
-	 * is most likely fragile and error prone - implement better
-	 * methodology.
-	 */
-	if (firstSpace < 0)
-	    return Optional.empty();
-
-	String protocol = responseLines[0].substring(0, firstSpace);
-	String statusCodeAndReason = responseLines[0].substring(firstSpace + 1, responseLines[0].length());
-	int secondSpace = statusCodeAndReason.indexOf(SPACE);
-	String statusCode = statusCodeAndReason.substring(0, secondSpace);
-	String reasonPhrase = statusCodeAndReason.substring(secondSpace + 1, statusCodeAndReason.length());
-
-	HttpResponseBuilder responseBuilder = new HttpResponseBuilder(protocol).withStatus(statusCode)
-		.withReasonPhrase(reasonPhrase);
+	StatusLine statusLine = new StatusLine(responseLines[0]);
+	HttpResponseBuilder responseBuilder = new HttpResponseBuilder(statusLine);
 
 	int lineIndex = 1;
 	String line = responseLines[lineIndex];
@@ -108,13 +97,15 @@ class HttpResponse {
 	    line = responseLines[lineIndex++];
 	}
 
-	int firstPayloadByte = findFirstPayloadByteIndex(bytes);
-
-	if (firstPayloadByte < bytes.length) {
-	    byte[] payloadBytes = new byte[bytes.length - firstPayloadByte];
-	    System.arraycopy(bytes, firstPayloadByte, payloadBytes, 0, payloadBytes.length);
-	    responseBuilder.withPayload(payloadBytes);
+	if (responseBuilder.requiresPayload()) {
+	    int firstPayloadByte = findFirstPayloadByteIndex(bytes);
+	    if (firstPayloadByte < bytes.length) {
+		byte[] payloadBytes = new byte[bytes.length - firstPayloadByte];
+		System.arraycopy(bytes, firstPayloadByte, payloadBytes, 0, payloadBytes.length);
+		responseBuilder.withPayload(payloadBytes);
+	    }
 	}
+
 	return Optional.of(responseBuilder.build());
     }
 

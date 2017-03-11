@@ -1,39 +1,37 @@
 package net.raumzeitfalle.niohttp;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Map.Entry;
-import java.util.TreeMap;
 
+/**
+ * Creates HttpResponses based on templates which are selected depending on
+ * status code. Currently there are 2 templates where payload is either required
+ * or not.
+ * 
+ * @author oliver
+ *
+ */
 class HttpResponseBuilder {
 
-    private final Map<ResponseStatus, String> responseStatus = new HashMap<>(3);
+    private final StatusLine statusLine;
 
-    private final Map<HeaderField, String> responseFields = new TreeMap<>(new HeaderFieldComparator());
+    private final HttpResponseTemplate template;
 
-    private byte[] payload = new byte[0];
-
-    /**
-     * With only protocol version given, a bad request response with status code
-     * 400 is created. No additional {@link GeneralResponseEntity} properties
-     * are set.
-     * 
-     * @param protocolVersion
-     */
-    public HttpResponseBuilder(String protocolVersion) {
-	addStatusParameter(ResponseStatus.PROTOCOL_VERSION, protocolVersion);
-	addStatusParameter(ResponseStatus.STATUS_CODE, "400");
-	addStatusParameter(ResponseStatus.REASON_PHRASE, "Bad Request");
+    public HttpResponseBuilder(String protocol, int code, String responsePhrase) {
+	this(new StatusLine(protocol, String.valueOf(code), responsePhrase));
     }
 
-    public HttpResponseBuilder withStatus(String statusCode) {
-	addStatusParameter(ResponseStatus.STATUS_CODE, statusCode);
-	return this;
+    public HttpResponseBuilder(String messageLine) {
+	this(new StatusLine(messageLine));
     }
 
-    public HttpResponseBuilder withReasonPhrase(String reasonPhrase) {
-	addStatusParameter(ResponseStatus.REASON_PHRASE, reasonPhrase);
+    public HttpResponseBuilder(StatusLine statusLine) {
+	Objects.requireNonNull(statusLine, "message line to be read must not be null");
+	this.statusLine = statusLine;
+	this.template = selectAppropriateTemplate();
+    }
+
+    public HttpResponseBuilder addMessageField(HeaderField field, String value) {
+	addFieldWithValue(field, value);
 	return this;
     }
 
@@ -82,46 +80,29 @@ class HttpResponseBuilder {
 	return this;
     }
 
-
-    public HttpResponseBuilder withPayload(byte[] payload) {
-	this.payload = payload;
+    public HttpResponseBuilder withPayload(byte[] bytes) {
+	this.template.withPayload(bytes);
 	return this;
-    }
-
-    public HttpResponseBuilder addMessageField(HeaderField field, String value) {
-	addFieldWithValue(field, value);
-	return this;
-    }
-
-    private void addFieldWithValue(final HeaderField field, final String value) {
-	this.responseFields.put(field, Objects.requireNonNull(value, "value assigned to field should not be null"));
-    }
-
-    private void addStatusParameter(final ResponseStatus parameter, final String value) {
-	this.responseStatus.put(parameter, Objects.requireNonNull(value, "value assigned to field should not be null"));
     }
 
     public HttpResponse build() {
-	HttpResponse response = new HttpResponse(protocolVersionText(),
-	        statusCode(), reasonPhrase(), payload);
+	return this.template.build();
+    }
 
-	for (Entry<HeaderField, String> e : responseFields
-	        .entrySet()) {
-	    response.addResponseFieldWithValue(e.getKey(), e.getValue());
+    public boolean requiresPayload() {
+	return this.template.requiresPayload();
+    }
+
+    private HttpResponseTemplate selectAppropriateTemplate() {
+	int code = statusLine.statusCode();
+	if ((code >= 100 && code < 200) || code == 204 || code == 304) {
+	    return new ResponseWithoutPayload(statusLine);
 	}
-	return response;
+	return new ResponseWithPayload(statusLine);
     }
 
-    private String reasonPhrase() {
-	return this.responseStatus.get(ResponseStatus.REASON_PHRASE);
+    private void addFieldWithValue(final HeaderField field, final String value) {
+	this.template.getResponseFields().put(field,
+		Objects.requireNonNull(value, "value assigned to field should not be null"));
     }
-
-    private String statusCode() {
-	return this.responseStatus.get(ResponseStatus.STATUS_CODE);
-    }
-
-    private String protocolVersionText() {
-	return this.responseStatus.get(ResponseStatus.PROTOCOL_VERSION);
-    }
-
 }

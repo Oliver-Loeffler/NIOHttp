@@ -8,10 +8,9 @@ import static org.junit.Assert.assertEquals;
 
 public class HttpResponseTest {
 
-    private HttpResponse classUnderTest = new HttpResponseBuilder("HTTP/1.1").withStatus("400")
-	    .withReasonPhrase("Bad Request").servedBy("nginx/1.10.2").deliveredAt("Sat, 04 Mar 2017 22:02:46 GMT")
-	    .withContentOfType("text/html").contentLength(173).withConnectionStatus("close")
-	    .withPayload(payload().getBytes()).build();
+    private HttpResponse classUnderTest = new HttpResponseBuilder("HTTP/1.1", 400, "Bad Request")
+	    .servedBy("nginx/1.10.2").deliveredAt("Sat, 04 Mar 2017 22:02:46 GMT").withContentOfType("text/html")
+	    .contentLength(173).withConnectionStatus("close").withPayload(payload().getBytes()).build();
 
     @Test
     public void comparingStringRepresentations() {
