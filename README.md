@@ -53,4 +53,6 @@ Building HTTP request and response objects which can be written and read from ja
 * The protocol: http://httpwg.org/specs/rfc7540.html
 * HTTP/2 Message Exchanging: http://httpwg.org/specs/rfc7540.html#HTTPLayer
 
+### HTTP over TLS (transport layer security)
 
+* https://tools.ietf.org/html/rfc2818#section-2
