@@ -58,8 +58,10 @@ class Demo {
      * Connects to given URL, writes a get request to URL and reads response.
      * 
      * @param responseConsumer
+     *            Consumer for HttpResponses
      * @throws IOException
-     * @throws InterruptedException
+     *             in case of any kind of connection error, an IOException is
+     *             thrown
      */
     public void run(Consumer<HttpResponse> responseConsumer) throws IOException {
 	try (SocketChannel socketChannel = SocketChannel.open(this.address)) {
