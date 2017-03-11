@@ -3,20 +3,22 @@ package net.raumzeitfalle.niohttp;
 import java.util.Objects;
 
 /**
- * Applicable specification: RFC7230, RFC2616 has been superseded.<br>
- * HTTP 1.1 RFC2616 section 6 defines following fields to provide additional
- * details about the response:
- * <ul>
- * <li>Accept-Ranges</li>
- * <li>Age</li>
- * <li>ETag</li>
- * <li>Location</li>
- * <li>Proxy-Authenticate</li>
- * <li>Retry-After</li>
- * <li>Server</li>
- * <li>Vary</li>
- * <li>WWW-Authenticate</li>
- * </ul>
+ * Message header fields as defined in RFC7231 provide additional details to a
+ * response.
+ * 
+ * @see <a href=
+ *      "http://httpwg.org/specs/rfc7231.html#response.header.fields">http://httpwg.org/specs/rfc7231.html#response.header.fields</a>
+ *      HTTP 1.1 RFC2616 section 6 defines following fields to provide
+ *      additional details about the response.
+ *      <ul>
+ *      <li>Accept-Ranges</li>
+ *      <li>Age</li>
+ *      <li>ETag</li>
+ *      <li>Location</li>
+ *      <li>Retry-After</li>
+ *      <li>Server</li>
+ *      <li>Vary</li>
+ *      </ul>
  *
  */
 public enum ResponseFields implements HeaderField {
@@ -24,11 +26,9 @@ public enum ResponseFields implements HeaderField {
     AGE("Age"),
     ETAG("ETag"),
     LOCATION("LOCATION"),
-    PROXY_AUTHENTICATE("Proxy-Authenticate"),
     RETRY_AFTER("Retry-After"),
     SERVER("Server"),
-    VARY("Vary"),
-    WWW_AUTHENTICATE("WWW-Authenticate");
+    VARY("Vary");
 
     private final String fieldName;
 

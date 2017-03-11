@@ -19,6 +19,8 @@ class HeaderFieldFactory {
 	    return GeneralFields.fromString(lineFromBytes);
 	} else if (ResponseFields.isResponseField(lineFromBytes)) {
 	    return ResponseFields.fromString(lineFromBytes);
+	} else if (AuthenticationFields.isResponseField(lineFromBytes)) {
+	    return AuthenticationFields.fromString(lineFromBytes);
 	} else if (EntityFields.isEntityField(lineFromBytes)) {
 	    return EntityFields.fromString(lineFromBytes);
 	} else {

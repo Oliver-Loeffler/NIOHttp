@@ -2,7 +2,6 @@ package net.raumzeitfalle.niohttp;
 
 import static org.junit.Assert.*;
 
-
 import org.junit.Test;
 
 public class HeaderFieldFactoryTest {
@@ -29,7 +28,13 @@ public class HeaderFieldFactoryTest {
     @Test
     public void createResponseFieldFromLine() {
 	HeaderField responseField = classUnderTest.fromString(responseKeyValueExample());
-	assertEquals(ResponseFields.WWW_AUTHENTICATE, responseField);
+	assertEquals(ResponseFields.AGE, responseField);
+    }
+
+    @Test
+    public void createAuthenticateFieldFromLine() {
+	HeaderField authenticateField = classUnderTest.fromString(authenticateKeyValueExample());
+	assertEquals(AuthenticationFields.WWW_AUTHENTICATE, authenticateField);
     }
 
     @Test
@@ -51,6 +56,10 @@ public class HeaderFieldFactoryTest {
     }
 
     private String responseKeyValueExample() {
+	return "AGE" + separatedFieldValue();
+    }
+
+    private String authenticateKeyValueExample() {
 	return "WWW-Authenticate" + separatedFieldValue();
     }
 
