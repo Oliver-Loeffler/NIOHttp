@@ -10,18 +10,38 @@ import java.util.Objects;
 import java.util.concurrent.FutureTask;
 import java.util.function.Consumer;
 
+/**
+ * Reads from a channel and produces HttpResponses.
+ */
 public class HttpResponseReader {
 
     private final ReadableByteChannel channel;
 
     private byte[] bytesRead = new byte[0];
 
+    /**
+     * Creates a new reader for a given channel. Call the read() method to
+     * obtain a {@link HttpResponse}.
+     * 
+     * @param channel
+     *            ReadableByteChannel
+     */
     public HttpResponseReader(final ReadableByteChannel channel) {
-	this.channel = Objects.requireNonNull(channel, "channel should not be null");
+	this.channel = Objects.requireNonNull(channel, "channel must not be null");
     }
 
+    /**
+     * Creates a {@link FutureTask} (without return value) to read HttpResponses
+     * from a given channel and supply a Consumer with them.
+     * 
+     * @param channel
+     *            {@link ReadableByteChannel}
+     * @param responseConsumer
+     *            {@link Consumer} for {@link HttpResponse}
+     * @return futureTask {@link FutureTask} w/o return value
+     */
     public static FutureTask<Void> fromChannel(final ReadableByteChannel channel,
-	    final Consumer<HttpResponse> responseConsumer) throws IOException {
+	    final Consumer<HttpResponse> responseConsumer) {
 
 	return new FutureTask<>(() -> {
 	    HttpResponseReader reader = new HttpResponseReader(channel);
@@ -32,7 +52,7 @@ public class HttpResponseReader {
     }
 
     public void read(final Consumer<HttpResponse> responseConsumer) throws IOException {
-	Objects.requireNonNull(responseConsumer, "responseConsumer should not be null");
+	Objects.requireNonNull(responseConsumer, "responseConsumer must not be null");
 	readBytesFromChannel();
 	HttpResponse response = fromBytes(this.bytesRead);
 	responseConsumer.accept(response);
