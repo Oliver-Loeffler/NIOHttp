@@ -37,6 +37,8 @@ The server won't respond unless a request is sent (for example a GET request).
 Even with bad requests server will respond, however, this may take time and response time is different.
 Here the static **HttpResponseReader.fromChannel(...)** method provides a **FutureTask< Void >** which can be executed by an **ExecutorService**. To collect the result, a **Consumer< HttpResponse >** must be provided.
 
+[Example] (NIOHttp/blob/master/src/main/java/net/raumzeitfalle/niohttp/playground/FutureDemo.java)
+
 ```java
 
  FutureTask<Void> futureTask = HttpResponseReader
@@ -46,7 +48,27 @@ Here the static **HttpResponseReader.fromChannel(...)** method provides a **Futu
  executor.submit(futureTask);
 
 ```
+Furthermore **HttpResponseReader.fromChannel(...)** returns a **Stream** of HttpResponse objects. 
 
+[Example] (NIOHttp/blob/master/src/main/java/net/raumzeitfalle/niohttp/playground/StreamDemo.java)
+
+```java
+
+Stream<HttpResponse> responseStream = HttpResponseReader.fromChannel(socketChannel); 
+responseStream.findFirst().ifPresent(consumer);
+
+```
+This would enable (given appropriate HttpResponse capabilities), interesting ways of working with HttpResponses. 
+
+```java
+
+HttpResponseReader.fromChannel(socketChannel)
+	    .filter( r -> r.isNotBadRequest() )
+	    .findFirst().ifPresent(consumer);
+	    
+```
+
+The current implementation is not yet fully functional here, as the **HttpResponseReader** only reads exactly one message from a channel. The response reading process has to be extended for continuous reading so that **HttpResponse** streaming will work.
 
 ## Resources
 
