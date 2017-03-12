@@ -48,9 +48,7 @@ Here the static **HttpResponseReader.fromChannel(...)** method provides a **Futu
 ```
 
 
-## HTTP Protocol Resources
-
-### General
+## Resources
 
 * HTTP Working Group: http://httpwg.org
 
@@ -74,8 +72,23 @@ Here the static **HttpResponseReader.fromChannel(...)** method provides a **Futu
 
 ### HTTP over TLS (transport layer security)
 
-* https://tools.ietf.org/html/rfc2818#section-2
+ * https://tools.ietf.org/html/rfc2818#section-2
 
+### Java non-blocking IO (NIO and NIO2) and Networking
+
+* Java API
+ * https://docs.oracle.com/javase/tutorial/
+ * Java NIO channels: http://docs.oracle.com/javase/8/docs/api/java/nio/channels/package-summary.html
+ 
+* Guides & Tutorials, Inspiration
+ * NIO2: http://www.ibm.com/developerworks/java/library/j-nio2-1/index.html
+ * NIO2 Async FileChannel: http://www.baeldung.com/java-nio2-async-file-channel
+ * Jenkov: http://tutorials.jenkov.com/java-nio/index.html
+ * NIO Selectors: http://www.baeldung.com/java-nio-selector
+ * Apache HttpClient: http://www.baeldung.com/httpasyncclient-tutorial
+ * Javaworld on NIO/NIO2: http://www.javaworld.com/article/2078654/core-java/java-se-five-ways-to-maximize-java-nio-and-nio-2.html
+ * Java2s on non-blocking async IO: http://www.java2s.com/Tutorials/Java/Java_Network/0080__Java_Network_Asynchronous_Socket_Channels.htm
+ 
 ### Other helpful references
 
  * As RFC7230 uses the term ABNF, here the explanation: https://en.wikipedia.org/wiki/Augmented_Backus–Naur_form
