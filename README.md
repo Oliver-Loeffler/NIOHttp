@@ -4,6 +4,8 @@
 
 Reading and writing HTTP request and response objects from and to  ``java.nio.channels`` .
 
+*This project has exploratory character and is in a very early stage of development.* 
+
 ## Goals:
 
  * Create a library/toolkit to write and read HTTP requests to and from ``java.nio.channels`` (Java's non-blocking IO)
