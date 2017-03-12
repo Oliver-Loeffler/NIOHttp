@@ -47,11 +47,11 @@ The server won't respond unless a request is sent (for example a GET request).
   
 ```
 Even with bad requests server will respond, however, this may take time and response time is different.
-Here the static  ``` HttpResponseReader.fromChannel(...) ``` method provides a ``` FutureTask<Void> ``` which can be executed by an ``` ExecutorService ``` . To collect the result, a  ```Consumer<HttpResponse>``` must be provided.
+Here the static **HttpResponseReader.fromChannel(...)** method provides a **FutureTask< Void >** which can be executed by an **ExecutorService**. To collect the result, a **Consumer< HttpResponse >** must be provided.
 
 ```java
 
- FutureTask<Void> futureTask = HttpResponseReader.fromChannel(socketChannel, consumer);
+ FutureTask<Void> futureTask = HttpResponseReader.fromChannel(socketChannel, r -> System.out.println(r.responseHeader());
  ExecutorService executor = Executors.newFixedThreadPool(1);
  executor.submit(futureTask);
 
