@@ -4,34 +4,20 @@
 
 Reading and writing HTTP request and response objects from and to  ``java.nio.channels`` .
 
-*This project has exploratory character and is in a very early stage of development.* 
+:warning: *This project has exploratory character and is in a very early stage of development.* 
 
-## Goals:
+## Goals
 
  * Create a library/toolkit to write and read HTTP requests to and from ``java.nio.channels`` (Java's non-blocking IO)
  * Explore ``java.util.concurrentjava.util.concurrent`` API
  * Do not use external frameworks, integrate HTTP protocol and  ``java.nio.channels``  using JDK 1.8+.
 
-### Boundary Conditions:
+### Boundary Conditions
 
  * zero external dependencies beside standard JDK except for unit & integration testing and build automation
 
-### Steps to implementation
 
- 1. Implement first draft of HttpResponse class and corresponding reader class considering RFC7230 and RFC7231
- 2. The first version of HttpResponse will only carry HTTP fields and payload
- 3. Implement simple HttpRequest class and corresponding HttpRequestBuilder
- 
- 
 ## Idea
-
- * Connecting to a given URL using SocketChannels
- * Submit a HttpRequest by writing the request to a ByteBuffer connected to the SocketChannel
- * Read the servers response from corresponding receive ByteBuffer
-  * Use HttpResponseReader to read the byte[] sequences
-  * Use HttpResponse.fromBytes(byte[] bytes) to create a HttpResponse object which allows access to all HTTP message fields and values and of course, to the HTTP response payload (content) 
-
-## Possible Concepts
 
 First one need to connect a **SocketStream** to a URL such as http://www.raumzeitfalle.de/.
 
@@ -53,7 +39,9 @@ Here the static **HttpResponseReader.fromChannel(...)** method provides a **Futu
 
 ```java
 
- FutureTask<Void> futureTask = HttpResponseReader.fromChannel(socketChannel, r -> System.out.println(r.responseHeader());
+ FutureTask<Void> futureTask = HttpResponseReader
+ 				.fromChannel(socketChannel,r -> System.out.println(r.responseHeader());
+ 		
  ExecutorService executor = Executors.newFixedThreadPool(1);
  executor.submit(futureTask);
 

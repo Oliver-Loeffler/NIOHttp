@@ -9,11 +9,12 @@ import java.nio.channels.ReadableByteChannel;
 import java.util.Objects;
 import java.util.concurrent.FutureTask;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * Reads from a channel and produces HttpResponses.
  */
-public class HttpResponseReader {
+public class HttpResponseReader implements Supplier<HttpResponse> {
 
     private final ReadableByteChannel channel;
 
@@ -56,6 +57,10 @@ public class HttpResponseReader {
 	readBytesFromChannel();
 	HttpResponse response = fromBytes(this.bytesRead);
 	responseConsumer.accept(response);
+    }
+
+    public HttpResponse get() {
+	return fromBytes(this.bytesRead);
     }
 
     /**

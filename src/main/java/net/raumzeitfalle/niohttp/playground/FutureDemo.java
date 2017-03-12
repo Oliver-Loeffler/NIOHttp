@@ -37,7 +37,6 @@ public class FutureDemo {
 
 	    System.out.println("Payload consists of: " + payloadSize + unit);
 	});
-
     }
 
     private final SocketAddress address;
