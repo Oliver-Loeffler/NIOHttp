@@ -7,14 +7,16 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 /**
  * Reads from a channel and produces HttpResponses.
  */
-public class HttpResponseReader implements Supplier<HttpResponse> {
+public class HttpResponseReader {
 
     private final ReadableByteChannel channel;
 
@@ -49,6 +51,23 @@ public class HttpResponseReader implements Supplier<HttpResponse> {
 	    reader.read(responseConsumer);
 	    return null;
 	});
+
+    }
+
+    public static Stream<HttpResponse> fromChannel(final ReadableByteChannel channel) {
+	HttpResponseSupplier consumer = new HttpResponseSupplier();
+	FutureTask<Void> futureTask = HttpResponseReader.fromChannel(channel, consumer);
+	ExecutorService executor = Executors.newFixedThreadPool(1);
+	executor.submit(futureTask);
+	boolean incomplete = true;
+	while (incomplete) {
+	    if (futureTask.isDone()) {
+		executor.shutdown();
+		return Stream.generate(consumer);
+	    }
+	}
+	executor.shutdown();
+	return Stream.empty();
 
     }
 
