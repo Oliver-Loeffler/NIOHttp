@@ -29,6 +29,34 @@ Reading and writing HTTP request and response objects from and to  ```java.nio.c
   * Use HttpResponseReader to read the byte[] sequences
   * Use HttpResponse.fromBytes(byte[] bytes) to create a HttpResponse object which allows access to all HTTP message fields and values and of course, to the HTTP response payload (content) 
 
+## Possible Concepts
+
+First one need to connect a ```SocketStream``` to a URL such as http://www.raumzeitfalle.de/.
+
+```java 
+ 
+ URL url = new URL("http://www.raumzeitfalle.de/");
+ InetSocketAddress address = new InetSocketAddress(url.getHost(), url.getDefaultPort());
+ SocketChannel socketChannel = SocketChannel.open(address);
+
+```
+The server won't respond unless a request is sent (for example a GET request).
+```java
+
+  writeGetRequestTo(socketChannel);
+  
+```
+Even with bad requests server will respond, however, this may take time and response time is different.
+Here the static  ``` HttpResponseReader.fromChannel(...) ``` method provides a ``` FutureTask<Void> ``` which can be executed by an ``` ExecutorService ``` . To collect the result, a  ```Consumer<HttpResponse>``` must be provided.
+
+```java
+
+ FutureTask<Void> futureTask = HttpResponseReader.fromChannel(socketChannel, consumer);
+ ExecutorService executor = Executors.newFixedThreadPool(1);
+ executor.submit(futureTask);
+
+```
+
 
 ## HTTP Protocol Resources
 
