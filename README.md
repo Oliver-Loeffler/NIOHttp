@@ -2,17 +2,17 @@
 
 [![Build Status](https://travis-ci.org/Oliver-Loeffler/NIOHttp.svg?branch=master)](https://travis-ci.org/Oliver-Loeffler/NIOHttp)  
 
-Reading and writing HTTP request and response objects from and to  ```java.nio.channels``` .
+Reading and writing HTTP request and response objects from and to  ``java.nio.channels`` .
 
 ## Goals:
 
- * Create a library/toolkit to write and read HTTP requests to and from ```java.nio.channels``` (Java's non-blocking IO)
- * Do not use external frameworks, integrate HTTP protocol and  ```java.nio.channels```  using JDK 1.8.
- * Of course, for unit and integration testing any kind of suitable framework can be used.
+ * Create a library/toolkit to write and read HTTP requests to and from ``java.nio.channels`` (Java's non-blocking IO)
+ * Explore ``java.util.concurrentjava.util.concurrent`` API
+ * Do not use external frameworks, integrate HTTP protocol and  ``java.nio.channels``  using JDK 1.8+.
 
 ### Boundary Conditions:
 
- * zero external dependencies beside JDK 1.8 (except for unit and integration testing)
+ * zero external dependencies beside standard JDK except for unit & integration testing and build automation
 
 ### Steps to implementation
 
