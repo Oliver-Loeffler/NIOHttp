@@ -3,11 +3,9 @@ package net.raumzeitfalle.niohttp;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.TreeMap;
 
 import static net.raumzeitfalle.niohttp.Constants.CRLF;
-import static net.raumzeitfalle.niohttp.Constants.SPACE;
 
 public class HttpResponse {
 
@@ -76,65 +74,4 @@ public class HttpResponse {
 	}
     }
 
-    /**
-     * Factory method creating a {@link HttpResponse} object from a byte array.
-     *
-     * @param bytes
-     *            byte array read from a channel
-     * @return HttpResponse object
-     */
-    protected static Optional<HttpResponse> fromBytes(byte[] bytes) {
-	String[] responseLines = new String(bytes).split(CRLF);
-
-	StatusLine statusLine = new StatusLine(responseLines[0]);
-	HttpResponseBuilder responseBuilder = new HttpResponseBuilder(statusLine);
-
-	// build message header here
-	int lineIndex = 1;
-	String line = responseLines[lineIndex];
-	while (!line.isEmpty()) {
-	    HeaderField messageField = HeaderFieldFactory.getInstance().fromString(line);
-	    int separation = line.indexOf(SPACE) + 1;
-	    responseBuilder.addMessageField(messageField, line.substring(separation, line.length()));
-	    line = responseLines[lineIndex++];
-	}
-
-	// provide message header to response builder
-
-	// use details from message header to control payload parsing
-
-	if (responseBuilder.requiresPayload()) {
-	    int firstPayloadByte = findFirstPayloadByteIndex(bytes);
-	    if (firstPayloadByte < bytes.length) {
-		byte[] payloadBytes = new byte[bytes.length - firstPayloadByte];
-		System.arraycopy(bytes, firstPayloadByte, payloadBytes, 0, payloadBytes.length);
-		responseBuilder.withPayload(payloadBytes);
-	    }
-	}
-	// add payload to builder
-
-	// return a new HttpResponse object
-
-	// ... continue parsing --> how do
-
-	return Optional.of(responseBuilder.build());
-    }
-
-    private static int findFirstPayloadByteIndex(byte[] bytes) {
-	int firstPayloadByte = 0;
-	while (firstPayloadByte < bytes.length) {
-	    if (firstPayloadByte > 3 && carriageReturnLineFeedTwoTimes(bytes, firstPayloadByte)) {
-		firstPayloadByte++;
-		break;
-	    }
-	    firstPayloadByte++;
-	}
-	return firstPayloadByte;
-    }
-
-    private static boolean carriageReturnLineFeedTwoTimes(byte[] bytes, int i) {
-	byte CR = 13;
-	byte LF = 10;
-	return bytes[i - 3] == CR && bytes[i - 2] == LF && bytes[i - 1] == CR && bytes[i] == LF;
-    }
 }

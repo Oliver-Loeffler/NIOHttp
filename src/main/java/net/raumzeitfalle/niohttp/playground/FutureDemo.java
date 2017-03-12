@@ -11,36 +11,33 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.ByteChannel;
 import java.nio.channels.SocketChannel;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 import net.raumzeitfalle.niohttp.HttpResponse;
 import net.raumzeitfalle.niohttp.HttpResponseReader;
 
 public class FutureDemo {
-    public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
+    public static void main(String[] args) throws IOException {
 	String address = "http://www.raumzeitfalle.de/";
-	FutureDemo demo = new FutureDemo(address);
-	try {
-	    demo.run(r -> {
-		System.out.println("Message header\n" + r.responseHeader());
+	FutureDemo demo = new FutureDemo(address, 5);
 
-		int payloadSize = r.getPayload().length;
-		String unit = "Byte";
-		if (payloadSize > 1024) {
-		    unit = "KiB";
-		    payloadSize /= 1024;
-		}
+	demo.run(r -> {
+	    System.out.println(r.responseHeader());
 
-		System.out.println("Payload consists of: " + payloadSize + unit);
-	    });
-	} catch (TimeoutException e) {
-	    System.out.println("No response received within timout");
-	}
+	    int payloadSize = r.getPayload().length;
+	    String unit = "Byte";
+	    if (payloadSize > 1024) {
+		unit = "KiB";
+		payloadSize /= 1024;
+	    }
+
+	    System.out.println("Payload consists of: " + payloadSize + unit);
+	});
+
     }
 
     private final SocketAddress address;
@@ -51,15 +48,17 @@ public class FutureDemo {
 
     private String hostname;
 
-    public FutureDemo(final String address) throws MalformedURLException {
+    private int timeoutSeconds;
+
+    public FutureDemo(final String address, int timeoutSeconds) throws MalformedURLException {
 	this.url = new URL(address);
 	this.hostname = this.url.getHost();
 	this.port = this.url.getDefaultPort();
 	this.address = new InetSocketAddress(this.hostname, this.port);
+	this.timeoutSeconds = timeoutSeconds;
     }
 
-    public void run(Consumer<HttpResponse> consumer)
-	    throws IOException, InterruptedException, ExecutionException, TimeoutException {
+    public void run(Consumer<HttpResponse> consumer) throws IOException {
 	System.out.println("Expecting a response after GET from: " + this.url.toString() + "\n\n");
 	try (SocketChannel socketChannel = SocketChannel.open(this.address)) {
 	    socketChannel.configureBlocking(true);
@@ -69,15 +68,11 @@ public class FutureDemo {
 
 	    ExecutorService executor = Executors.newFixedThreadPool(1);
 	    executor.submit(futureTask);
-
-	    boolean keepRunning = true;
-	    while (keepRunning) {
-		if (futureTask.isDone()) {
-		    keepRunning = false;
-		}
-	    }
-
-	    System.out.println("Got the response!");
+	    executor.awaitTermination(this.timeoutSeconds, TimeUnit.SECONDS);
+	    executor.shutdown();
+	    System.out.println("\n\nExecutor shutdown after waiting: " + this.timeoutSeconds + "s.");
+	} catch (InterruptedException e) {
+	    System.out.println("Error occured during task execution: " + e.getMessage());
 	}
     }
 

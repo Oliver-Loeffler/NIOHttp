@@ -22,14 +22,6 @@ public class HttpResponseTest {
 	assertArrayEquals(getExpectedByteSequence(), classUnderTest.getBytes());
     }
 
-    @Test
-    public void fromBytes() {
-	HttpResponse testCase = HttpResponse.fromBytes(getExpectedByteSequence()).get();
-
-	assertEquals(exectedStringResponse(), testCase.toString());
-
-    }
-
     private byte[] getExpectedByteSequence() {
 	return exectedStringResponse().getBytes();
     }
