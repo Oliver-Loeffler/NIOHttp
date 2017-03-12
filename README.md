@@ -37,7 +37,7 @@ The server won't respond unless a request is sent (for example a GET request).
 Even with bad requests server will respond, however, this may take time and response time is different.
 Here the static **HttpResponseReader.fromChannel(...)** method provides a **FutureTask< Void >** which can be executed by an **ExecutorService**. To collect the result, a **Consumer< HttpResponse >** must be provided.
 
-[Example] (NIOHttp/blob/master/src/main/java/net/raumzeitfalle/niohttp/playground/FutureDemo.java)
+[Example] (src/main/java/net/raumzeitfalle/niohttp/playground/FutureDemo.java)
 
 ```java
 
@@ -50,7 +50,7 @@ Here the static **HttpResponseReader.fromChannel(...)** method provides a **Futu
 ```
 Furthermore **HttpResponseReader.fromChannel(...)** returns a **Stream** of HttpResponse objects. 
 
-[Example] (NIOHttp/blob/master/src/main/java/net/raumzeitfalle/niohttp/playground/StreamDemo.java)
+[Example] (src/main/java/net/raumzeitfalle/niohttp/playground/StreamDemo.java)
 
 ```java
 
