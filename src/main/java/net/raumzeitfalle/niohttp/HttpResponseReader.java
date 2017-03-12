@@ -5,9 +5,10 @@ import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.FutureTask;
 import java.util.function.Consumer;
 
-class HttpResponseReader {
+public class HttpResponseReader {
 
     private final ReadableByteChannel channel;
 
@@ -15,6 +16,17 @@ class HttpResponseReader {
 
     public HttpResponseReader(final ReadableByteChannel channel) {
 	this.channel = Objects.requireNonNull(channel, "channel should not be null");
+    }
+
+    public static FutureTask<Void> fromChannel(final ReadableByteChannel channel,
+	    final Consumer<HttpResponse> responseConsumer) throws IOException {
+
+	return new FutureTask<>(() -> {
+	    HttpResponseReader reader = new HttpResponseReader(channel);
+	    reader.read(responseConsumer);
+	    return null;
+	});
+
     }
 
     public void read(final Consumer<HttpResponse> responseConsumer) throws IOException {

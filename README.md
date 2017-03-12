@@ -2,17 +2,17 @@
 
 [![Build Status](https://travis-ci.org/Oliver-Loeffler/NIOHttp.svg?branch=master)](https://travis-ci.org/Oliver-Loeffler/NIOHttp)  
 
-Building HTTP request and response objects which can be written and read from java.nio.channels.
+Reading and writing HTTP request and response objects from and to  ```java.nio.channels``` .
 
 ## Goals:
 
- * Create a library/toolkit to build and send HTTP requests vis NIO/NIO2 as well to receive HTTP requests via NIO/NIO2 and to parse them
- * Implement HTTP/1.1 first.
+ * Create a library/toolkit to write and read HTTP requests to and from ```java.nio.channels``` (Java's non-blocking IO)
+ * Do not use external frameworks, integrate HTTP protocol and  ```java.nio.channels```  using JDK 1.8.
+ * Of course, for unit and integration testing any kind of suitable framework can be used.
 
 ### Boundary Conditions:
 
- * zero external dependencies beside JDK 1.8
- * only testing frameworks for (Junit, TestNG or others) and mocking frameworks (Mockito, PowerMock etc.) are permitted
+ * zero external dependencies beside JDK 1.8 (except for unit and integration testing)
 
 ### Steps to implementation
 
@@ -21,7 +21,7 @@ Building HTTP request and response objects which can be written and read from ja
  3. Implement simple HttpRequest class and corresponding HttpRequestBuilder
  
  
-# Idea
+## Idea
 
  * Connecting to a given URL using SocketChannels
  * Submit a HttpRequest by writing the request to a ByteBuffer connected to the SocketChannel
@@ -29,11 +29,12 @@ Building HTTP request and response objects which can be written and read from ja
   * Use HttpResponseReader to read the byte[] sequences
   * Use HttpResponse.fromBytes(byte[] bytes) to create a HttpResponse object which allows access to all HTTP message fields and values and of course, to the HTTP response payload (content) 
 
-# Basics
-## The HTTP Working Group
+
+## HTTP Protocol Resources
+
+### General
 
 * HTTP Working Group: http://httpwg.org
-
 
 ### The HTTP/1.1 Protocol 
 

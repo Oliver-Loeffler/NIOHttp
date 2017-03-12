@@ -1,4 +1,4 @@
-package net.raumzeitfalle.niohttp;
+package net.raumzeitfalle.niohttp.playground;
 
 import static net.raumzeitfalle.niohttp.Constants.*;
 import java.io.IOException;
@@ -13,6 +13,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.Consumer;
+
+import net.raumzeitfalle.niohttp.HttpResponse;
+import net.raumzeitfalle.niohttp.HttpResponseReader;
 
 /**
  * Writes a HTTP request to www.raumzeitfalle.net/ using Java NIO SocketChannel.

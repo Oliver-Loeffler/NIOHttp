@@ -17,12 +17,12 @@ public class HttpResponse {
 
     private final Map<HeaderField, String> responseFields = new TreeMap<>(new HeaderFieldComparator());
 
-    public HttpResponse(final StatusLine statusLine, final byte[] payload) {
+    protected HttpResponse(final StatusLine statusLine, final byte[] payload) {
 	this.statusLine = Objects.requireNonNull(statusLine, "statusLine must nut be null");
 	this.payload = Objects.requireNonNull(payload, "payload should not be null");
     }
 
-    public HttpResponse(final String protocolVersion, final String statusCode, final String reasonPhrase,
+    protected HttpResponse(final String protocolVersion, final String statusCode, final String reasonPhrase,
 	    final byte[] payload) {
 
 	this.statusLine = new StatusLine(Objects.requireNonNull(protocolVersion, "protocolVersion should not be null"),
@@ -63,7 +63,7 @@ public class HttpResponse {
 	return toString().getBytes();
     }
 
-    public void addResponseFieldWithValue(final HeaderField field, final String value) {
+    protected void addResponseFieldWithValue(final HeaderField field, final String value) {
 	this.responseFields.put(field, Objects.requireNonNull(value, "value assigned to a field must not be null"));
     }
 
@@ -83,12 +83,13 @@ public class HttpResponse {
      *            byte array read from a channel
      * @return HttpResponse object
      */
-    public static Optional<HttpResponse> fromBytes(byte[] bytes) {
+    protected static Optional<HttpResponse> fromBytes(byte[] bytes) {
 	String[] responseLines = new String(bytes).split(CRLF);
 
 	StatusLine statusLine = new StatusLine(responseLines[0]);
 	HttpResponseBuilder responseBuilder = new HttpResponseBuilder(statusLine);
 
+	// build message header here
 	int lineIndex = 1;
 	String line = responseLines[lineIndex];
 	while (!line.isEmpty()) {
@@ -98,6 +99,10 @@ public class HttpResponse {
 	    line = responseLines[lineIndex++];
 	}
 
+	// provide message header to response builder
+
+	// use details from message header to control payload parsing
+
 	if (responseBuilder.requiresPayload()) {
 	    int firstPayloadByte = findFirstPayloadByteIndex(bytes);
 	    if (firstPayloadByte < bytes.length) {
@@ -106,6 +111,11 @@ public class HttpResponse {
 		responseBuilder.withPayload(payloadBytes);
 	    }
 	}
+	// add payload to builder
+
+	// return a new HttpResponse object
+
+	// ... continue parsing --> how do
 
 	return Optional.of(responseBuilder.build());
     }
