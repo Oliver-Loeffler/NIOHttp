@@ -31,7 +31,7 @@ Reading and writing HTTP request and response objects from and to  ```java.nio.c
 
 ## Possible Concepts
 
-First one need to connect a ```SocketStream``` to a URL such as http://www.raumzeitfalle.de/.
+First one need to connect a **SocketStream** to a URL such as http://www.raumzeitfalle.de/.
 
 ```java 
  
