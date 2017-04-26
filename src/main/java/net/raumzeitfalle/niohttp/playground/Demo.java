@@ -16,6 +16,8 @@ import java.util.function.Consumer;
 
 import net.raumzeitfalle.niohttp.HttpResponse;
 import net.raumzeitfalle.niohttp.HttpResponseReader;
+import net.raumzeitfalle.niohttp.requests.HttpRequestBuilder;
+import net.raumzeitfalle.niohttp.requests.Request;
 
 /**
  * Writes a HTTP request to www.raumzeitfalle.net/ using Java NIO SocketChannel.
@@ -103,19 +105,10 @@ class Demo {
 
     private void writeGetRequestToChannel(ByteChannel channel) throws IOException {
 
-	// @formatter:off
-        String request = new StringBuilder("GET").append(SPACE)
-                .append(this.url.getPath()).append(SPACE).append("HTTP/1.1")
-                .append(CRLF)
-		.append("User-Agent: NIOHttp/0.1 Java")
-                .append(CRLF)
-                .append("Host:").append(SPACE).append(url.getHost())
-                .append(CRLF)
-                .append("Accept-Language: en-us").append(CRLF)
-                .append("Connection: close").append(CRLF).append(CRLF)
-                .toString();
-        // @formatter:on
+	Request request = new HttpRequestBuilder(this.url).closeConnection()
+		.userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1").httpGet();
 
+	sysout(request.getBytes(), "HTTP Request");
 	ByteBuffer sending = ByteBuffer.allocate(request.getBytes().length);
 	sending.put(request.getBytes());
 	sending.flip();
