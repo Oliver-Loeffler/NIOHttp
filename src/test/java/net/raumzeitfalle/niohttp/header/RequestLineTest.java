@@ -14,6 +14,11 @@ public class RequestLineTest {
 
     RequestLine classUnderTest;
 
+    @Test(expected = NullPointerException.class)
+    public void httpGetNullUrl() throws MalformedURLException {
+	new RequestLine(RequestType.GET, null);
+    }
+
     @Test
     public void httpGetAtRoot() throws MalformedURLException {
 	classUnderTest = new RequestLine(RequestType.GET, new URL("http://www.raumzeitfalle.de"));
