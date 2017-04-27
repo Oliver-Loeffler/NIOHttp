@@ -7,7 +7,7 @@ import net.raumzeitfalle.niohttp.Constants;
 import net.raumzeitfalle.niohttp.Protocol;
 import net.raumzeitfalle.niohttp.RequestType;
 
-public class RequestHeader implements Supplier<String> {
+public class RequestLine implements Supplier<String> {
 
     private RequestType type;
 
@@ -15,7 +15,7 @@ public class RequestHeader implements Supplier<String> {
 
     private Protocol protocol;
 
-    public RequestHeader(RequestType type, URL url) {
+    public RequestLine(RequestType type, URL url) {
 	this.type = type;
 	this.resource = getResourcePath(url);
 	this.protocol = Protocol.fromUrl(url);

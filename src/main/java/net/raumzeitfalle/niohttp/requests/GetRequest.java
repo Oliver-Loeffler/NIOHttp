@@ -7,13 +7,13 @@ import net.raumzeitfalle.niohttp.RequestType;
 import net.raumzeitfalle.niohttp.header.Connection;
 import net.raumzeitfalle.niohttp.header.GeneralHeaderField;
 import net.raumzeitfalle.niohttp.header.Host;
-import net.raumzeitfalle.niohttp.header.RequestHeader;
+import net.raumzeitfalle.niohttp.header.RequestLine;
 import net.raumzeitfalle.niohttp.header.RequestHeaderField;
 import net.raumzeitfalle.niohttp.header.UserAgent;
 
 class GetRequest implements Request {
 
-    private RequestHeader header;
+    private RequestLine header;
 
     private RequestHeaderField userAgent;
 
@@ -22,7 +22,7 @@ class GetRequest implements Request {
     private GeneralHeaderField connection;
 
     public GetRequest(URL url, UserAgent userAgent, Connection connection) {
-	this.header = new RequestHeader(RequestType.GET, url);
+	this.header = new RequestLine(RequestType.GET, url);
 	this.userAgent = userAgent;
 	this.host = new Host(url);
 	this.connection = connection;

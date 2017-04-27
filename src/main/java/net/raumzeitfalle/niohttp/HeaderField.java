@@ -1,8 +1,7 @@
 package net.raumzeitfalle.niohttp;
 
 /**
- * Applicable specification: RFC7230, RFC2616 has been superseded.
- *
+ * Applicable specification: RFC7230
  */
 public interface HeaderField {
 

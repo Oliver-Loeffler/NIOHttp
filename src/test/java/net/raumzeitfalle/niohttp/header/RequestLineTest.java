@@ -10,19 +10,19 @@ import org.junit.Test;
 import net.raumzeitfalle.niohttp.Constants;
 import net.raumzeitfalle.niohttp.RequestType;
 
-public class RequestHeaderTest {
+public class RequestLineTest {
 
-    RequestHeader classUnderTest;
+    RequestLine classUnderTest;
 
     @Test
     public void httpGetAtRoot() throws MalformedURLException {
-	classUnderTest = new RequestHeader(RequestType.GET, new URL("http://www.raumzeitfalle.de"));
+	classUnderTest = new RequestLine(RequestType.GET, new URL("http://www.raumzeitfalle.de"));
 	assertEquals(exampleHeaderWithRootResource(), classUnderTest.get());
     }
 
     @Test
     public void httpGetWithResource() throws MalformedURLException {
-	classUnderTest = new RequestHeader(RequestType.GET, new URL("http://www.raumzeitfalle.de/page.html"));
+	classUnderTest = new RequestLine(RequestType.GET, new URL("http://www.raumzeitfalle.de/page.html"));
 	assertEquals(exampleHeaderWithResource(), classUnderTest.get());
     }
 
