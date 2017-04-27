@@ -4,12 +4,7 @@ import java.net.URL;
 
 import net.raumzeitfalle.niohttp.Constants;
 import net.raumzeitfalle.niohttp.RequestType;
-import net.raumzeitfalle.niohttp.header.Connection;
-import net.raumzeitfalle.niohttp.header.GeneralHeaderField;
-import net.raumzeitfalle.niohttp.header.Host;
-import net.raumzeitfalle.niohttp.header.RequestLine;
-import net.raumzeitfalle.niohttp.header.RequestHeaderField;
-import net.raumzeitfalle.niohttp.header.UserAgent;
+import net.raumzeitfalle.niohttp.header.*;
 
 class GetRequest implements Request {
 
@@ -18,7 +13,7 @@ class GetRequest implements Request {
     private RequestHeaderField userAgent;
 
     private RequestHeaderField host;
-    
+
     private GeneralHeaderField connection;
 
     public GetRequest(URL url, UserAgent userAgent, Connection connection) {
@@ -34,8 +29,7 @@ class GetRequest implements Request {
 		.append(this.userAgent.get())
 		.append(this.host.get())
 		.append(this.connection.get())
-		.append(Constants.CRLF)
-		.toString();
+		.append(Constants.CRLF).toString();
     }
 
     @Override
